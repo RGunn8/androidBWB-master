@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.learning.leap.bwb">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name="com.learning.leap.bwb.BabbleApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <service
+            android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
+            android:enabled="true" />
+        <service
+            android:name=".ActionHistoryIntentService"
+            android:exported="false" />
+
+        <service
+            android:name="com.learning.leap.bwb.ScheduleBucketIntentService"
+            android:exported="false" />
+
+        <service
+            android:name=".DownloadService"
+            android:exported="false" />
+
+        <receiver android:name="com.learning.leap.bwb.tipReminder.VoteNotificationBroadcastReciever" />
+
+        <receiver
+            android:name=".AlarmReciver"
+            android:exported="false">
+
+        </receiver>
+
+        <receiver
+            android:name="com.learning.leap.bwb.utility.ResetAlarmClockBrodcastReceiver"
+            android:enabled="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.learning.leap.bwb.baseActivity.SplashActivity"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.learning.leap.bwb.userInfo.UserInfoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.learning.leap.bwb.download.DownloadActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.learning.leap.bwb.baseActivity.HomeActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.learning.leap.bwb.baseActivity.DetailActivity"
+            android:screenOrientation="portrait"
+
+            ></activity>
+        <activity
+            android:name="com.learning.leap.bwb.library.VideoActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+        <activity
+            android:name="com.learning.leap.bwb.settings.TipSettingsActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.learning.leap.bwb.settings.SettingOptionActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.learning.leap.bwb.settings.WhyActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name="com.learning.leap.bwb.vote.VoteViewActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""></activity>
+        <activity
+            android:name=".download.CongratsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".library.LibraryCategoryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".library.LibraryActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".library.PlayTodayActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".settings.AgeRangeActivity" />
+        <activity android:name=".UpdatedToTwoActivity" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ba1c204d431ab2416f26cdae557866c316a04f9d" />
+    </application>
+
+</manifest>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/tip_bg">
+
+
+    <TextView
+        android:id="@+id/voteFragmentPromptTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/voteFragmentFavoriteButton"
+        android:layout_below="@id/voteFragmentPlayAudioImageView"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="Loading. . ."
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/voteFragmentPlayAudioImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/tip_playaudio" />
+
+    <Button
+        android:id="@+id/voteFragmentStopButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/rectangle_3_3x"
+        android:text="@string/stop"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/voteFragmentPlayVideoImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:src="@drawable/tip_playvideo" />
+
+
+    <ImageView
+        android:id="@+id/voteFragmentFavoriteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/likeTipTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/heart" />
+
+    <ImageView
+        android:id="@+id/voteFragmentThumbsUpImageView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="30dp"
+        android:scaleType="center"
+        android:src="@drawable/tip_thumbsup" />
+
+
+    <TextView
+        android:id="@+id/likeTipTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_alignTop="@id/voteFragmentThumbsDownImageView"
+        android:layout_alignBottom="@+id/voteFragmentThumbsDownImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="0dp"
+        android:layout_toStartOf="@+id/voteFragmentThumbsDownImageView"
+        android:layout_toLeftOf="@+id/voteFragmentThumbsDownImageView"
+        android:gravity="center"
+        android:text="@string/didYouLikeThis"
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/voteFragmentThumbsDownImageView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignStart="@+id/voteFragmentPlayVideoImageView"
+        android:layout_alignLeft="@+id/voteFragmentPlayVideoImageView"
+        android:layout_alignTop="@+id/voteFragmentThumbsUpImageView"
+        android:layout_alignBottom="@+id/voteFragmentThumbsUpImageView"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/tip_thumbsdown" />
+
+
+</RelativeLayout>
