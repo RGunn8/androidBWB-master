@@ -10,9 +10,9 @@ import com.learning.leap.bwb.UpdatedToTwoActivity
 import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.userInfo.UserInfoActivity
 import com.learning.leap.bwb.utility.Constant
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 class SplashActivity : AppCompatActivity() {
@@ -36,12 +36,7 @@ class SplashActivity : AppCompatActivity() {
     private fun goToCorrectScreen(sharedPreferences: SharedPreferences) {
         val didDownload = sharedPreferences.getBoolean(Constant.DID_DOWNLOAD, false)
         val needUpdate = sharedPreferences.getBoolean(Constant.UPDATE, false)
-        val didUpdateToTwo = sharedPreferences.getBoolean(Constant.UPDATE_TO_TWO, false)
 
-        if (didDownload && !didUpdateToTwo) {
-            updateIntent()
-            return
-        }
         if (didDownload && !needUpdate) {
             homeIntent()
         } else if (needUpdate) {

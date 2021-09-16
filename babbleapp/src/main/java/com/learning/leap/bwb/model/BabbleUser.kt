@@ -1,56 +1,52 @@
 package com.learning.leap.bwb.model
 
 import android.content.Context
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.*
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
+import com.learning.leap.bwb.Player.birthdayDate
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
-import com.learning.leap.bwb.models.BabblePlayer
 import com.learning.leap.bwb.utility.Constant.updateAges
-import io.realm.Realm
-import io.realm.RealmModel
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.floor
 
-@RealmClass
+@Entity
 @DynamoDBTable(tableName = "babbleUsers")
-open class BabbleUser() : RealmModel {
-    @PrimaryKey
+data class BabbleUser(
+
+    @ColumnInfo(name = "babbleID")
     @DynamoDBHashKey(attributeName = "Id")
-    var babbleID: String = ""
+    var babbleID: String,
 
     @DynamoDBRangeKey(attributeName = "BabyBirthday")
-    var babyBirthday: String = ""
+    @ColumnInfo(name = "babyBirthday")
+    var babyBirthday: String,
 
     @DynamoDBAttribute(attributeName = "BabyName")
-    var babyName: String = ""
+    @ColumnInfo(name = "babyName")
+    var babyName: String,
 
     @DynamoDBAttribute(attributeName = "BabyGender")
-    var babyGender: String = "Not Now"
+    @ColumnInfo(name = "babyGender")
+    var babyGender: String = "Not Now",
 
     @DynamoDBAttribute(attributeName = "GroupCode")
-    var groupCode: String = "None"
+    @ColumnInfo(name = "groupCode")
+    var groupCode: String = "None",
 
-    var userAgeInMonth = 0
+    ) {
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0
+
+    @Ignore
+    var userAgeInMonth: Int = 0
+
+    @Ignore
     var birthdayDate: Date? = null
-
-
-    constructor(
-        babbleID: String,
-        babyBirthday: String,
-        babyName: String,
-        babyGender: String,
-        groupCode: String = "none"
-    ) : this() {
-        this.babbleID = babbleID
-        this.babyBirthday = babyBirthday
-        this.babyName = babyName
-        this.babyGender = babyGender
-        this.groupCode = groupCode
-        setUserAgeInMonth()
-    }
 
     companion object {
         fun loadBabblePlayerFromSharedPref(saveHelper: LocalLoadSaveHelper): BabbleUser {
@@ -65,29 +61,61 @@ open class BabbleUser() : RealmModel {
         fun saveUpdatedInfo(context: Context?) {
             val saveHelper = LocalLoadSaveHelper(context)
             val sharedPrefBirthDay = saveHelper.babyBirthDay
-            val updatedBabblePlayer = BabbleUser()
-            updatedBabblePlayer.babyBirthday = sharedPrefBirthDay
-            updatedBabblePlayer.setUserAgeInMonth()
-            saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.userAgeInMonth)
+            val userAgeInMonth = setUserAgeInMonth(sharedPrefBirthDay)
+
+            saveHelper.saveUserBirthDayInMonth(userAgeInMonth)
+        }
+
+        fun setUserAgeInMonth(babyBirthday: String): Int {
+            val pattern = "MM/dd/yyyy"
+            val format = SimpleDateFormat(pattern, Locale.getDefault())
+            format.isLenient = false
+            format.parse(babyBirthday)?.let {
+                val userAgeInMonthDouble = daysBetween(it).toDouble() / 30
+                if (userAgeInMonthDouble > 0 && userAgeInMonthDouble < 1) {
+                    return 1
+                }
+                return floor(userAgeInMonthDouble).toInt()
+
+            } ?: kotlin.run {
+                return 0
+            }
+        }
+
+        private fun daysBetween(birthdayDate: Date): Float {
+            val date = Date()
+            return ((date.time - birthdayDate.time) / (1000 * 60 * 60 * 24)).toFloat()
+        }
+
+        fun checkDate(babyBirthday: String): Date? {
+            val pattern = "MM/dd/yyyy"
+            val format = SimpleDateFormat(pattern, Locale.getDefault())
+            format.isLenient = false
+            try {
+                format.parse(babyBirthday)?.let {
+                    return birthdayDate
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
+            }
+            return null
         }
 
         fun homeScreenAgeCheck(context: Context?): Int {
             val saveHelper = LocalLoadSaveHelper(context)
             val sharedPrefBirthDay = saveHelper.babyBirthDay
-            val updatedBabblePlayer = BabbleUser()
-            updatedBabblePlayer.babyBirthday = sharedPrefBirthDay
-            updatedBabblePlayer.setUserAgeInMonth()
+            val userAgeInMonth = setUserAgeInMonth(sharedPrefBirthDay)
             if (!saveHelper.checkedSaveBabyAged()) {
-                saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.userAgeInMonth)
+                saveHelper.saveUserBirthDayInMonth(userAgeInMonth)
                 saveHelper.updatedSavedBabyAged(true)
             }
             val sharedPrefBirthDayInMonth = saveHelper.userBirthdayInMonth
-            return getAgeRangeBucket(sharedPrefBirthDayInMonth, updatedBabblePlayer)
+            return getAgeRangeBucket(sharedPrefBirthDayInMonth)
         }
 
         private fun getAgeRangeBucket(
             sharedPrefBirthDayInMonth: Int,
-            updatedBabblePlayer: BabbleUser
         ): Int {
             if (checkIfAgeIsInRange(0, 3, sharedPrefBirthDayInMonth)) {
                 return 0
@@ -119,7 +147,7 @@ open class BabbleUser() : RealmModel {
     }
 
     fun getUserAge(context: Context): Int {
-        val ageBucket = getAgeRangeBucket(userAgeInMonth, this)
+        val ageBucket = getAgeRangeBucket(userAgeInMonth)
         val saveHelper = LocalLoadSaveHelper(context)
         val saveAgeRangeBucket = saveHelper.ageRangeBucketNumber
         if (ageBucket != saveAgeRangeBucket) {
@@ -129,46 +157,22 @@ open class BabbleUser() : RealmModel {
         }
     }
 
-    fun setUserAgeInMonth() {
-        if (checkDate()) {
-            val userAgeInMonthDouble = daysBetween(birthdayDate!!).toDouble() / 30
-            if (userAgeInMonthDouble > 0 && userAgeInMonthDouble < 1) {
-                userAgeInMonth = 1
-                return
-            }
-            userAgeInMonth = floor(userAgeInMonthDouble).toInt()
-        }
-    }
+
 
     private fun checkName(): Boolean {
-        return !checkNameIsEmpty()!! && !checkNameIsTooLong()!!
+        return !checkNameIsEmpty() && !checkNameIsTooLong()!!
     }
 
-    fun checkNameIsEmpty(): Boolean? {
+    fun checkNameIsEmpty(): Boolean {
         return babyName.isEmpty() || babyName == ""
     }
 
-    fun checkNameIsTooLong(): Boolean? {
+    fun checkNameIsTooLong(): Boolean {
         return babyName.length >= 20
     }
 
-    fun checkIfPlayerIsValid(): Boolean? {
-        return checkDate() && checkName() && userAgeInMonth > 0
-    }
-
-    fun checkDate(): Boolean {
-        val pattern = "MM/dd/yyyy"
-        val format = SimpleDateFormat(pattern, Locale.getDefault())
-        format.isLenient = false
-        try {
-            format.parse(babyBirthday)?.let {
-                birthdayDate = it
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return false
-        }
-        return true
+    fun checkIfPlayerIsValid(): Boolean {
+        return checkDate(this.babyBirthday) != null && checkName() && userAgeInMonth > 0
     }
 
 
@@ -176,11 +180,6 @@ open class BabbleUser() : RealmModel {
         return userAgeInMonth >= value
     }
 
-
-    private fun daysBetween(birthday: Date): Float {
-        val date = Date()
-        return ((date.time - birthday.time) / (1000 * 60 * 60 * 24)).toFloat()
-    }
 
     fun saveBabbleUser(mapper: DynamoDBMapper, saveHelper: LocalLoadSaveHelper) {
         mapper.save(this)
@@ -194,7 +193,7 @@ open class BabbleUser() : RealmModel {
         saveHelper.saveBabbleID(babbleID)
         saveHelper.saveBabyGender(babyGender)
         saveHelper.saveGroupCode(groupCode)
-        val ageRangeBucket = getAgeRangeBucket(userAgeInMonth, this)
+        val ageRangeBucket = getAgeRangeBucket(userAgeInMonth)
         saveHelper.saveAgeRangeBucket(ageRangeBucket)
     }
 
@@ -223,14 +222,14 @@ open class BabbleUser() : RealmModel {
     fun saveUpdatedInfo(context: Context?) {
         val saveHelper = LocalLoadSaveHelper(context)
         val sharedPrefBirthDay = saveHelper.babyBirthDay
-        val updatedBabblePlayer = BabblePlayer()
-        updatedBabblePlayer.babyBirthday = sharedPrefBirthDay
-        updatedBabblePlayer.setuserAgeInMonth()
-        saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.getuserAgeInMonth())
+        // val updatedBabblePlayer = BabbleUser
+//        updatedBabblePlayer.babyBirthday = sharedPrefBirthDay
+//        updatedBabblePlayer.setuserAgeInMonth()
+        // saveHelper.saveUserBirthDayInMonth(updatedBabblePlayer.getuserAgeInMonth())
     }
 
     fun savePlayerToRealm() {
-        Realm.getDefaultInstance().copyToRealmOrUpdate(this)
+        //Realm.getDefaultInstance().copyToRealmOrUpdate(this)
     }
 
 }

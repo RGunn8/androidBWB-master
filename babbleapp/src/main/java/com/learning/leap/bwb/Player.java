@@ -1,18 +1,15 @@
 package com.learning.leap.bwb;
 
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
-import com.learning.leap.bwb.models.BabblePlayer;
-import com.learning.leap.bwb.models.Notification;
-import com.learning.leap.bwb.research.ResearchNotifications;
+import com.learning.leap.bwb.model.BabbleTip;
 import com.learning.leap.bwb.utility.NetworkCheckerInterface;
 
 import java.util.Date;
 
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
+
 
 /**
  * Created by ryanlgunn8 on 5/31/17.
@@ -29,9 +26,7 @@ public interface Player {
 
     Observable<Object> savePlayerObservable(DynamoDBMapper mapper, NetworkCheckerInterface checker, LocalLoadSaveHelper saveHelper);
 
-    Observable<PaginatedScanList<Notification>> retriveNotifications(int babyAge, DynamoDBMapper mapper);
-
-    Observable<PaginatedScanList<ResearchNotifications>> retriveNorthWestenNotifications(DynamoDBMapper mapper);
+    Observable<PaginatedScanList<BabbleTip>> retriveNotifications(int babyAge, DynamoDBMapper mapper);
 
     void setuserAgeInMonth();
 

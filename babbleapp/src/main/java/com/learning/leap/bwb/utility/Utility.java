@@ -9,11 +9,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
-import androidx.appcompat.app.AlertDialog;
-
 import android.util.DisplayMetrics;
 import android.view.View;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.auth.CognitoCredentialsProvider;
@@ -22,7 +21,7 @@ import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
-import com.learning.leap.bwb.models.ActionHistory;
+import com.learning.leap.bwb.model.BabbleActionHistory;
 import com.learning.leap.bwb.userInfo.UserInfoActivity;
 
 public class Utility {
@@ -126,7 +125,7 @@ public class Utility {
     }
 
     public static void addCustomEvent(String event, String ID, String tag, Context context) {
-        ActionHistory.createActionHistoryItem(ID, event, tag, readStringSharedPreferences(Constant.GROUP_CODE, context));
+        BabbleActionHistory.Companion.createActionHistoryItem(ID, event, tag, readStringSharedPreferences(Constant.GROUP_CODE, context));
     }
 
 

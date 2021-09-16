@@ -1,22 +1,24 @@
 package com.learning.leap.bwb.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable
-import io.realm.RealmModel
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
 
-@RealmClass
+@Entity
 @DynamoDBTable(tableName = "babbleAgeRanges")
-open class BabbleAgeRange : RealmModel {
+class BabbleAgeRange(
 
     @DynamoDBAttribute(attributeName = "AgeRange")
-    var ageRange: String = ""
+    @ColumnInfo(name = "ageRange")
+    var ageRange: String,
 
     @DynamoDBAttribute(attributeName = "StartMonth")
     @PrimaryKey
-    var startMonth: Int = 0
+    var startMonth: Int,
 
     @DynamoDBAttribute(attributeName = "EndMonth")
-    var endMonth: Int = 0
-}
+    @ColumnInfo(name = "endMonth")
+    var endMonth: Int,
+)

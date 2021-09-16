@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.work.OneTimeWorkRequest;
@@ -24,6 +23,7 @@ import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.model.BabbleTip;
 import com.learning.leap.bwb.model.BabbleUser;
 import com.learning.leap.bwb.models.AWSDownload;
+import com.learning.leap.bwb.room.BabbleDatabase;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
@@ -31,12 +31,12 @@ import java.io.File;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 
 public class DownloadService extends Service implements DownloadPresneterInterface {
     private final IBinder mBinder = new LocalBinder();
@@ -84,12 +84,16 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
             AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
             TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
             awsDownload = new AWSDownload(this, transferUtility, this);
-            realmNotificationSubscription = BabbleTip.getNotificationFromRealm(Realm.getDefaultInstance())
-                    .subscribe(notifications -> awsDownload.addNotificationsFilesToList(notifications),
+            realmNotificationSubscription = BabbleDatabase.Companion.getInstance(getApplicationContext()).babbleTipDAO().getAll()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(notifications -> {
+                                awsDownload.addNotificationsFilesToList(notifications);
+                                int filesDownloadAtPaused = 0;
+                                awsDownload.downloadFiles(filesDownloadAtPaused);
+                                started = true;
+                            },
                             throwable -> errorHasOccured());
-            int filesDownloadAtPaused = 0;
-            awsDownload.downloadFiles(filesDownloadAtPaused);
-            started = true;
             disposables.add(realmNotificationSubscription);
         }
     }
@@ -116,9 +120,6 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
     }
 
     private void deleteOldTips() {
-        Realm.getDefaultInstance().beginTransaction();
-        Realm.getDefaultInstance().deleteAll();
-        Realm.getDefaultInstance().commitTransaction();
         if (this.getFilesDir().listFiles() != null) {
             File[] files = this.getFilesDir().listFiles();
             if (files != null) {
@@ -137,11 +138,6 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
             BabbleTip tip = notifications.get(i);
             tip.setId(i);
         }
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        realm.where(BabbleTip.class).findAll().deleteAllFromRealm();
-        realm.copyToRealm(notifications);
-        realm.commitTransaction();
     }
 
     @Override
@@ -179,7 +175,6 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
             Utility.writeIntSharedPreferences(Constant.TIPS_PER_DAY, 3, this);
             Utility.writeBoolenSharedPreferences(Constant.TIP_ONE_ON, true, this);
             Utility.writeBoolenSharedPreferences(Constant.TIP_TWO_ON, true, this);
-            Utility.writeBoolenSharedPreferences(Constant.UPDATE_TO_TWO, true, this);
             Calendar dueDate = Calendar.getInstance();
             dueDate.add(Calendar.MINUTE, 1);
             OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(DailyWorker.class).

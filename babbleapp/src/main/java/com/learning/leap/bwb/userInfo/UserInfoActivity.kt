@@ -6,13 +6,10 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
@@ -23,7 +20,6 @@ import com.learning.leap.bwb.utility.DynamoDBSingleton
 import com.learning.leap.bwb.utility.NetworkChecker
 import com.learning.leap.bwb.utility.Utility
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
-import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_user_info.*
 import java.util.*
 
@@ -47,7 +43,7 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
         newUser = intent.getBooleanExtra(Constant.NEW_USER, false)
         userInfoPresenter = UserInfoPresenter(
             newUser, this, LocalLoadSaveHelper(this),
-            NetworkChecker(this), Realm.getDefaultInstance(),
+            NetworkChecker(this),
             DynamoDBSingleton.getDynamoDB(this)
         )
         if (!newUser) {
@@ -90,8 +86,8 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
             now[Calendar.DAY_OF_MONTH] // Inital day selection
         )
         dpd.accentColor = ContextCompat.getColor(this, R.color.darkestBlue)
-        dpd.setOkColor(Color.WHITE)
-        dpd.setCancelColor(Color.WHITE)
+        dpd.setOkColor(Color.BLACK)
+        dpd.setCancelColor(Color.BLACK)
         dpd.setOnCancelListener {
             dialogIsShowing = false
         }
@@ -230,5 +226,6 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
         val correctMonth = monthOfYear + 1
         date = "$correctMonth/$dayOfMonth/$year"
         userProfileBirtdayEditText.setText(date)
+        dialogIsShowing = false
     }
 }

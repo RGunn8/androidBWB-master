@@ -1,105 +1,124 @@
 package com.learning.leap.bwb.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable
-import io.reactivex.Observable
-import io.realm.Realm
-import io.realm.RealmModel
-import io.realm.RealmResults
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
-import java.util.concurrent.Callable
 import java.util.regex.Pattern
 
-@RealmClass
+@Entity
 @DynamoDBTable(tableName = "babbleTips")
-open class BabbleTip() : RealmModel {
+class BabbleTip {
     @DynamoDBRangeKey(attributeName = "Created")
+    @ColumnInfo(name = "created")
     var created: String = ""
 
     @DynamoDBHashKey(attributeName = "Tag")
+    @ColumnInfo(name = "tag")
     var tag: String = ""
 
     @DynamoDBAttribute(attributeName = "AgeRange")
+    @ColumnInfo(name = "ageRange")
     var ageRange: String = ""
 
     @DynamoDBAttribute(attributeName = "Deleted")
+    @ColumnInfo(name = "deleted")
     var deleted: String = ""
 
     @DynamoDBAttribute(attributeName = "EndMonth")
+    @ColumnInfo(name = "endMonth")
     var endMonth: Int = 0
 
     @DynamoDBAttribute(attributeName = "Message")
+    @ColumnInfo(name = "message")
     var message: String = ""
 
     @DynamoDBAttribute(attributeName = "SoundFileName")
+    @ColumnInfo(name = "soundFileName")
     var soundFileName: String = ""
 
     @DynamoDBAttribute(attributeName = "StartMonth")
+    @ColumnInfo(name = "startMonth")
     var startMonth: Int = 0
 
     @DynamoDBAttribute(attributeName = "VideoFileName")
+    @ColumnInfo(name = "videoFileName")
     var videoFileName: String = ""
 
     @DynamoDBAttribute(attributeName = "Language")
-    private var language: String = ""
+    @ColumnInfo(name = "language")
+    var language: String = ""
 
     @DynamoDBAttribute(attributeName = "Category")
+    @ColumnInfo(name = "category")
     var category: String = ""
 
     @DynamoDBAttribute(attributeName = "Subcategory")
-    var subcategory: String = ""
-    public var playToday: Boolean = false
+    @ColumnInfo(name = "subCategory")
+    var subCategory: String = ""
+
+    @ColumnInfo(name = "favorite")
     var favorite: Boolean = false
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
+    @ColumnInfo(name = "playToday")
+    var playToday: Boolean = false
+
+    constructor() {
+
+    }
+
+    public
+
+
     companion object {
-        @JvmStatic
-        fun getNotificationFromRealm(realm: Realm): Observable<RealmResults<BabbleTip>> {
-            return Observable.fromCallable(Callable {
-                realm.where(BabbleTip::class.java).findAll()
-            })
-        }
+//        @JvmStatic
+//        fun getNotificationFromRealm(realm: Realm): Observable<RealmResults<BabbleTip>> {
+//            return Observable.fromCallable(Callable {
+//                realm.where(BabbleTip::class.java).findAll()
+//            })
+//        }
 
-        @JvmStatic
-        fun getTipsWithCategory(
-            category: String,
-            realm: Realm
-        ): Observable<RealmResults<BabbleTip>> {
-            return Observable.fromCallable(Callable {
-                realm.where(BabbleTip::class.java).equalTo("category", category).findAll()
-            })
-        }
+//        @JvmStatic
+//        fun getTipsWithCategory(
+//            category: String,
+//            realm: Realm
+//        ): Observable<RealmResults<BabbleTip>> {
+//            return Observable.fromCallable(Callable {
+//                realm.where(BabbleTip::class.java).equalTo("category", category).findAll()
+//            })
+//        }
 
-        @JvmStatic
-        fun getTipsWithSubcategory(
-            subCategory: String,
-            realm: Realm
-        ): Observable<RealmResults<BabbleTip>> {
-            return Observable.fromCallable(Callable {
-                realm.where(BabbleTip::class.java).equalTo("subcategory", subCategory).findAll()
-            })
-        }
+//        @JvmStatic
+//        fun getTipsWithSubcategory(
+//            subCategory: String,
+//            realm: Realm
+//        ): Observable<RealmResults<BabbleTip>> {
+//            return Observable.fromCallable(Callable {
+//                realm.where(BabbleTip::class.java).equalTo("subcategory", subCategory).findAll()
+//            })
+//        }
 
-        @JvmStatic
-        fun getFavoriteTips(realm: Realm): Observable<RealmResults<BabbleTip>> {
-            return Observable.fromCallable(Callable {
-                realm.where(BabbleTip::class.java).equalTo("favorite", true).findAll()
-            })
-        }
+//        @JvmStatic
+//        fun getFavoriteTips(realm: Realm): Observable<RealmResults<BabbleTip>> {
+//            return Observable.fromCallable(Callable {
+//                realm.where(BabbleTip::class.java).equalTo("favorite", true).findAll()
+//            })
+//        }
 
-        @JvmStatic
-        fun getPlayTodayFromRealm(realm: Realm): Observable<RealmResults<BabbleTip>> {
-            return Observable.fromCallable(Callable {
-                realm.where(BabbleTip::class.java)
-                    .equalTo("playToday", true)
-                    .findAll()
-            })
-        }
+//        @JvmStatic
+//        fun getPlayTodayFromRealm(realm: Realm): Observable<RealmResults<BabbleTip>> {
+//            return Observable.fromCallable(Callable {
+//                realm.where(BabbleTip::class.java)
+//                    .equalTo("playToday", true)
+//                    .findAll()
+//            })
+//        }
 
     }
 
@@ -119,3 +138,6 @@ open class BabbleTip() : RealmModel {
     }
 
 }
+
+
+

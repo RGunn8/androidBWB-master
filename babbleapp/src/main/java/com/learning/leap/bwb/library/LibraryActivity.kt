@@ -1,25 +1,17 @@
 package com.learning.leap.bwb.library
 
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.learning.leap.bwb.R
-import com.learning.leap.bwb.baseActivity.HomeActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.notification.NotificaitonPresenter
 import com.learning.leap.bwb.notification.NotificationViewViewInterface
-import com.learning.leap.bwb.settings.SettingOptionActivity
 import com.learning.leap.bwb.utility.Constant
 import com.learning.leap.bwb.utility.Utility
 import kotlinx.android.synthetic.main.activity_library.*
@@ -84,7 +76,6 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface,
             notificationPresenter.subCategory = intent.getStringExtra(LIBRARY_SUB_CATEGORY)
         }
         notificationPresenter.onCreate()
-        notificationPresenter.displayFavorite()
         mediaPlayer = MediaPlayer()
 
         libraryActivityNextImageView.setOnClickListener { notificationPresenter.onNextPress() }

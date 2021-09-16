@@ -1,8 +1,8 @@
 package com.learning.leap.bwb.userInfo;
 
 import com.learning.leap.bwb.baseInterface.LifeCycleInterface;
-import com.learning.leap.bwb.models.BabblePlayer;
-import com.learning.leap.bwb.models.Notification;
+import com.learning.leap.bwb.model.BabbleTip;
+import com.learning.leap.bwb.model.BabbleUser;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
 public interface UserInfoPresenterInterface extends LifeCycleInterface {
     void updatePlayer();
 
-    void saveNotifications(List<Notification> notifications);
+    void saveNotifications(List<BabbleTip> notifications);
 
     void retriveNotificationsFromAmazon();
 
-    void createBabblePlayer(BabblePlayer babblePlayer);
+    void createBabblePlayer(BabbleUser babblePlayer);
 
     void checkUserInput();
 

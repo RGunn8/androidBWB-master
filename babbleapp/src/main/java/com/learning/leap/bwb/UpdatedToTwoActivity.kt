@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.learning.leap.bwb.userInfo.UserInfoActivity
 import com.learning.leap.bwb.utility.Constant
-import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_update_two.*
 
 class UpdatedToTwoActivity : AppCompatActivity() {
@@ -14,10 +13,6 @@ class UpdatedToTwoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_update_two)
         supportActionBar?.hide()
         updateContinueButton.setOnClickListener {
-            val realm = Realm.getDefaultInstance()
-            realm.beginTransaction()
-            realm.deleteAll()
-            realm.commitTransaction()
             userInfoIntent()
         }
 

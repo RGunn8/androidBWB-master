@@ -1,42 +1,25 @@
 package com.learning.leap.bwb.baseActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.evernote.android.job.JobManager;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.learning.leap.bwb.ActionHistoryIntentService;
-import com.learning.leap.bwb.BuildConfig;
-import com.learning.leap.bwb.DailyWorker;
-import com.learning.leap.bwb.PlayTodayJob;
+import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.library.LibraryCategoryActivity;
 import com.learning.leap.bwb.library.PlayTodayActivity;
-import com.learning.leap.bwb.model.BabbleUser;
-import com.learning.leap.bwb.models.BabblePlayer;
+import com.learning.leap.bwb.settings.SettingOptionActivity;
 import com.learning.leap.bwb.tipReminder.TipReminder;
 import com.learning.leap.bwb.utility.Constant;
-import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.utility.Utility;
-import com.learning.leap.bwb.settings.SettingOptionActivity;
 
-import java.io.File;
-import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
-
-import io.reactivex.disposables.Disposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 
 public class HomeActivity extends AppCompatActivity {

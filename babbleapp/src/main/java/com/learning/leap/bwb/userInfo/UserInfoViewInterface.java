@@ -2,9 +2,7 @@ package com.learning.leap.bwb.userInfo;
 
 import androidx.annotation.NonNull;
 
-import com.learning.leap.bwb.Player;
 import com.learning.leap.bwb.model.BabbleUser;
-import com.learning.leap.bwb.models.BabblePlayer;
 
 
 public interface UserInfoViewInterface {

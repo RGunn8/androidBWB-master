@@ -4,18 +4,12 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.view.View;
 
 import com.learning.leap.bwb.AlarmReciver;
-import com.learning.leap.bwb.BuildConfig;
-import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
-import com.learning.leap.bwb.models.Notification;
-import com.learning.leap.bwb.tipReminder.TipReminder;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,11 +18,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-
-import io.reactivex.Observable;
-import io.reactivex.functions.Action;
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 
 public class ScheduleBucket {
@@ -94,24 +83,20 @@ public class ScheduleBucket {
     }
 
     private void removePlayToday() {
-        Realm realm = Realm.getDefaultInstance();
-        RealmResults<Notification> realmResults = realm.where(Notification.class).equalTo("mPlayToday", true).findAll();
-        for (Notification notification : realmResults) {
-            realm.beginTransaction();
-            notification.setPlayToday(false);
-            realm.copyToRealmOrUpdate(notification);
-            realm.commitTransaction();
-        }
+        // RealmResults<Notification> realmResults = realm.where(Notification.class).equalTo("mPlayToday", true).findAll();
+//        for (Notification notification : realmResults) {
+//            realm.beginTransaction();
+//            notification.setPlayToday(false);
+//            realm.copyToRealmOrUpdate(notification);
+//            realm.commitTransaction();
+//        }
     }
 
 
     private void getNumberOfTipsPerNotification() {
         int numberOfTotalTips;
-        if (!BuildConfig.FLAVOR.equals("regular")) {
-            numberOfTotalTips = 5;
-        } else {
-            numberOfTotalTips = Utility.readIntSharedPreferences(Constant.NUM_OF_TIPS, context);
-        }
+        numberOfTotalTips = Utility.readIntSharedPreferences(Constant.NUM_OF_TIPS, context);
+
         switch (numberOfTotalTips) {
             case 3:
                 setTipsForBuckets(1, 1, 1);

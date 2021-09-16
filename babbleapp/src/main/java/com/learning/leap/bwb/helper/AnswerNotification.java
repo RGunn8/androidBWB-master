@@ -2,10 +2,9 @@ package com.learning.leap.bwb.helper;
 
 import java.util.Date;
 
-import io.realm.RealmObject;
 
 
-public class AnswerNotification extends RealmObject {
+public class AnswerNotification {
     public Date mAnswerTime;
     public int mAnswerBucket;
     private int mAnswerHour;

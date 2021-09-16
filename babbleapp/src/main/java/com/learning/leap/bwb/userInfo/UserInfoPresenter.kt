@@ -5,20 +5,19 @@ import com.learning.leap.bwb.R
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.model.BabbleUser
+import com.learning.leap.bwb.room.BabbleDatabase
 import com.learning.leap.bwb.utility.NetworkCheckerInterface
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 class UserInfoPresenter(
     private val newUser: Boolean,
     private val userInfoViewInterface: UserInfoViewInterface,
     private val saveHelper: LocalLoadSaveHelper,
     private val networkCheckerInterface: NetworkCheckerInterface,
-    private val realm: Realm,
     private val mapper: DynamoDBMapper
 ) {
     private var babblePlayer: BabbleUser? = null
@@ -33,6 +32,8 @@ class UserInfoPresenter(
             val disposable = Completable.fromAction {
                 if (networkCheckerInterface.isConnected) {
                     it.saveBabbleUser(mapper, saveHelper)
+                    BabbleDatabase.getInstance().babbleUserDAO().deleteUser()
+                    BabbleDatabase.getInstance().babbleUserDAO().addUser(it)
                 } else {
                     throw java.lang.Exception()
                 }
@@ -96,21 +97,35 @@ class UserInfoPresenter(
     }
 
     private fun saveNotifications(notifications: List<BabbleTip>) {
-        for (i in notifications.indices) {
-            notifications[i].id = i
-        }
         saveHelper.saveNotificationSize(notifications.size)
-        realm.beginTransaction()
-        realm.where(BabbleTip::class.java).findAll().deleteAllFromRealm()
-        realm.copyToRealm(notifications)
-        babblePlayer?.savePlayerToRealm()
-        realm.commitTransaction()
-        userInfoViewInterface.downloadIntent()
+        val result = Completable.fromAction {
+            BabbleDatabase.getInstance().babbleTipDAO().deleteAllNotifications()
+            BabbleDatabase.getInstance().babbleTipDAO().insertAll(notifications)
+        }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                updateBabblePlayer()
+            }
+        disposables.add(result)
+    }
+
+    private fun updateBabblePlayer() {
+        babblePlayer?.let {
+            Completable.fromAction { BabbleDatabase.getInstance().babbleUserDAO().addUser(it) }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    userInfoViewInterface.downloadIntent()
+                }
+        }
     }
 
 
-    fun createBabblePlayer(user: BabbleUser?) {
+    fun createBabblePlayer(user: BabbleUser) {
         babblePlayer = user
+        babblePlayer?.birthdayDate = BabbleUser.checkDate(user.babyBirthday)
+        babblePlayer?.userAgeInMonth = BabbleUser.setUserAgeInMonth(user.babyBirthday)
     }
 
     fun loadPlayerFromSharedPref() {
@@ -120,19 +135,19 @@ class UserInfoPresenter(
 
     fun checkUserInput() {
         babblePlayer?.let {
-            if (it.checkIfPlayerIsValid()!!) {
+            if (it.checkIfPlayerIsValid()) {
                 updatePlayer()
-            } else if (it.checkNameIsEmpty()!!) {
+            } else if (it.checkNameIsEmpty()) {
                 userInfoViewInterface.displayErrorDialog(
                     R.string.userNameNameErrorTitle,
                     R.string.userNameEmptyError
                 )
-            } else if (it.checkNameIsTooLong()!!) {
+            } else if (it.checkNameIsTooLong()) {
                 userInfoViewInterface.displayErrorDialog(
                     R.string.userNameNameErrorTitle,
                     R.string.userNameToLongError
                 )
-            } else if (!it.checkDate()) {
+            } else if (BabbleUser.checkDate(it.babyBirthday) == null) {
                 userInfoViewInterface.displayErrorDialog(
                     R.string.userBirthdayErrorTitle,
                     R.string.userBirthdayError

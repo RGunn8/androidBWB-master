@@ -1,16 +1,12 @@
 package com.learning.leap.bwb.vote;
 
-import com.learning.leap.bwb.BuildConfig;
 import com.learning.leap.bwb.baseInterface.BaseNotificationPresenter;
-import com.learning.leap.bwb.helper.AnswerNotification;
 import com.learning.leap.bwb.model.BabbleTip;
-import com.learning.leap.bwb.models.Notification;
-import com.learning.leap.bwb.research.ResearchNotifications;
+import com.learning.leap.bwb.room.BabbleDatabase;
 
-import java.util.Date;
+import java.util.List;
 
-import io.reactivex.disposables.Disposable;
-import io.realm.Realm;
+import io.reactivex.rxjava3.core.Single;
 
 
 public class VotePresenter extends BaseNotificationPresenter {
@@ -25,9 +21,8 @@ public class VotePresenter extends BaseNotificationPresenter {
     }
 
     @Override
-    public void getRealmResults() {
-        Disposable disposable = BabbleTip.Companion.getNotificationFromRealm(Realm.getDefaultInstance()).subscribe(this::setNotifications, Throwable::printStackTrace);
-        disposables.add(disposable);
+    public Single<List<BabbleTip>> getRealmResults() {
+        return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getAll();
     }
 
     @Override
@@ -68,17 +63,19 @@ public class VotePresenter extends BaseNotificationPresenter {
     }
 
     private void updateRandomNotification() {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        tipAtIndex().setPlayToday(true);
-        realm.copyToRealmOrUpdate(tipAtIndex());
-        realm.commitTransaction();
-        realm.beginTransaction();
-        AnswerNotification answerNotification = new AnswerNotification();
-        answerNotification.setAnswerBucket(bucketNumber);
-        answerNotification.mAnswerTime = new Date();
-        realm.copyToRealm(answerNotification);
-        realm.commitTransaction();
+
+        //Todo update random notificaiton
+//        Realm realm = Realm.getDefaultInstance();
+//        realm.beginTransaction();
+//        tipAtIndex().setPlayToday(true);
+//        realm.copyToRealmOrUpdate(tipAtIndex());
+//        realm.commitTransaction();
+//        realm.beginTransaction();
+//        AnswerNotification answerNotification = new AnswerNotification();
+//        answerNotification.setAnswerBucket(bucketNumber);
+//        answerNotification.mAnswerTime = new Date();
+//        realm.copyToRealm(answerNotification);
+//        realm.commitTransaction();
     }
 
 }

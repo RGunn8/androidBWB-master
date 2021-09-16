@@ -2,13 +2,11 @@ package com.learning.leap.bwb.notification;
 
 import com.learning.leap.bwb.baseInterface.BaseNotificationPresenter;
 import com.learning.leap.bwb.model.BabbleTip;
-import com.learning.leap.bwb.models.Notification;
+import com.learning.leap.bwb.room.BabbleDatabase;
 
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import io.realm.Realm;
+import java.util.List;
+
+import io.reactivex.rxjava3.core.Single;
 
 
 public class NotificaitonPresenter extends BaseNotificationPresenter {
@@ -20,24 +18,21 @@ public class NotificaitonPresenter extends BaseNotificationPresenter {
     public String subCategory;
 
     @Override
-    public void getRealmResults() {
+    public Single<List<BabbleTip>> getRealmResults() {
         babyName = baseNotificationViewInterface.babyName();
         if (isAll) {
-            Disposable disposable = BabbleTip.Companion.getNotificationFromRealm(Realm.getDefaultInstance())
-                    .subscribe(this::setNotifications, Throwable::printStackTrace);
-            disposables.add(disposable);
+            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getAll();
+            //.subscribe(this::setNotifications, Throwable::printStackTrace);
+
         } else if (isCategory) {
-            Disposable disposable = BabbleTip.Companion.getTipsWithCategory(category, Realm.getDefaultInstance())
-                    .subscribe(this::setNotifications, Throwable::printStackTrace);
-            disposables.add(disposable);
+            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getNotificationForCategory(category);
+            //.subscribe(this::setNotifications, Throwable::printStackTrace);
         } else if (isFavorite) {
-            Disposable disposable = BabbleTip.Companion.getFavoriteTips(Realm.getDefaultInstance())
-                    .subscribe(this::setNotifications, Throwable::printStackTrace);
-            disposables.add(disposable);
+            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getNotificationForFavorites();
+
         } else {
-            Disposable disposable = BabbleTip.Companion.getTipsWithSubcategory(subCategory, Realm.getDefaultInstance())
-                    .subscribe(this::setNotifications, Throwable::printStackTrace);
-            disposables.add(disposable);
+            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getNotificationFromSubCategory(subCategory);
+
         }
     }
 

@@ -2,12 +2,9 @@ package com.learning.leap.bwb.tipSettings;
 
 import android.content.Context;
 
-import com.learning.leap.bwb.helper.AnswerNotification;
 import com.learning.leap.bwb.models.UserTipSettings;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
-
-import io.realm.Realm;
 
 
 public class TipSettingsPresenters {
@@ -46,9 +43,9 @@ public class TipSettingsPresenters {
     }
 
     private void deleteAnserNotifications() {
-        Realm.getDefaultInstance().beginTransaction();
-        Realm.getDefaultInstance().where(AnswerNotification.class).findAll().deleteAllFromRealm();
-        Realm.getDefaultInstance().commitTransaction();
+//        Realm.getDefaultInstance().beginTransaction();
+//        Realm.getDefaultInstance().where(AnswerNotification.class).findAll().deleteAllFromRealm();
+//        Realm.getDefaultInstance().commitTransaction();
     }
 
     public void startTimeMinusButtonPressed() {

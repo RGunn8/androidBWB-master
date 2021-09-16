@@ -1,17 +1,20 @@
 package com.learning.leap.bwb.baseInterface;
 
-import android.widget.RelativeLayout;
-
 import com.learning.leap.bwb.model.BabbleTip;
 import com.learning.leap.bwb.notification.NotificationPresenterInterface;
 import com.learning.leap.bwb.notification.NotificationViewViewInterface;
+import com.learning.leap.bwb.room.BabbleDatabase;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
-import io.reactivex.disposables.CompositeDisposable;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 public abstract class BaseNotificationPresenter implements NotificationPresenterInterface {
@@ -29,7 +32,7 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     }
 
 
-    public abstract void getRealmResults();
+    public abstract Single<List<BabbleTip>> getRealmResults();
 
     public void updateView() {
         if (isPlaying) {
@@ -40,10 +43,11 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
         soundButtonCheck();
     }
 
-    public void setNotifications(RealmResults<BabbleTip> notificationRealmResults) {
+    public void setNotifications(List<BabbleTip> notificationRealmResults) {
         notifications.addAll(notificationRealmResults);
         Collections.shuffle(notifications);
         totalCount = notifications.size();
+        displayFirstTip();
     }
 
 
@@ -73,12 +77,14 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     }
 
     public Boolean updateFavoriteForTip() {
-        Realm realm = Realm.getDefaultInstance();
-        realm.beginTransaction();
-        boolean isFavorite = tipAtIndex().getFavorite();
-        tipAtIndex().setFavorite(!isFavorite);
-        realm.commitTransaction();
-        return tipAtIndex().getFavorite();
+        BabbleTip tip = tipAtIndex();
+        tip.setFavorite(!tip.getFavorite());
+        Completable.fromAction(() -> {
+            BabbleDatabase.Companion.getInstance(null).babbleTipDAO().updateTip(tip);
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
+        return tip.getFavorite();
     }
 
 
@@ -125,7 +131,13 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     @Override
     public void onCreate() {
         setBaseNotificationViewInterface(notificationViewInterface);
-        getRealmResults();
+        Disposable disposable = getRealmResults().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setNotifications, Throwable::printStackTrace);
+        disposables.add(disposable);
+    }
+
+    private void displayFirstTip() {
         notificationViewInterface.hidePreviousButton();
         if (notifications.size() <= 1) {
             notificationViewInterface.hideNextButton();
@@ -134,6 +146,9 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
         if (notifications.size() == 0) {
             hideAllButtons();
         } else {
+            videoButtonCheck();
+            soundButtonCheck();
+            displayFavorite();
             displayPrompt();
             baseNotificationViewInterface.updateFavorite(tipAtIndex().getFavorite());
         }

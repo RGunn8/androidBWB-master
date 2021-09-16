@@ -1,6 +1,5 @@
 package com.learning.leap.bwb.library
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,10 +11,11 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.model.BabbleTip
-import io.reactivex.Observable
-import io.reactivex.disposables.CompositeDisposable
-import io.realm.Realm
-import io.realm.RealmResults
+import com.learning.leap.bwb.room.BabbleDatabase
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_library_category.*
 
 class LibraryCategoryActivity : AppCompatActivity() {
@@ -62,27 +62,39 @@ class LibraryCategoryActivity : AppCompatActivity() {
 
     private fun getAllCategories() {
         val hashMap = mutableMapOf<String, List<BabbleTip>>()
-        Realm.getDefaultInstance().where(BabbleTip::class.java).findAllAsync()
-            .addChangeListener { collection, changeSet ->
-                createCategoryList(false, collection, hashMap)
-            }
+        val disposable =
+            BabbleDatabase.getInstance().babbleTipDAO().getAll().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    createCategoryList(it, hashMap)
+                }, {
+                    it.printStackTrace()
+                })
+
+        disposables.add(disposable)
     }
 
     private fun getSubCategory(category: String) {
         val hashMap = mutableMapOf<String, List<BabbleTip>>()
-        Realm.getDefaultInstance().where(BabbleTip::class.java).equalTo("category", category)
-            .findAllAsync().addChangeListener { collection, changeSet ->
-                createSubCategoryList(collection, hashMap)
-            }
+        val disposable =
+            BabbleDatabase.getInstance().babbleTipDAO().getNotificationForCategory(category)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    createSubCategoryList(it, hashMap)
+                }, {
+                    it.printStackTrace()
+                })
+
+        disposables.add(disposable)
     }
 
     private fun getCategoryString(isSubCategory: Boolean, babbleTip: BabbleTip): String {
-        return if (isSubCategory) babbleTip.subcategory else babbleTip.category
+        return if (isSubCategory) "babbleTip.subcategory" else babbleTip.category
     }
 
     private fun createCategoryList(
-        isSubCategory: Boolean,
-        collection: RealmResults<BabbleTip>?,
+        collection: List<BabbleTip>,
         hashMap: MutableMap<String, List<BabbleTip>>
     ) {
         val disposable = Observable.fromIterable(collection).groupBy { it.category }.flatMapSingle {
@@ -101,15 +113,15 @@ class LibraryCategoryActivity : AppCompatActivity() {
     }
 
     private fun createSubCategoryList(
-        collection: RealmResults<BabbleTip>?,
+        collection: List<BabbleTip>,
         hashMap: MutableMap<String, List<BabbleTip>>
     ) {
         val disposable =
-            Observable.fromIterable(collection).groupBy { it.subcategory }.flatMapSingle {
+            Observable.fromIterable(collection).groupBy { it.subCategory }.flatMapSingle {
                 it.toList()
             }.subscribe({
                 if (it.isNotEmpty()) {
-                    hashMap[it.get(0).subcategory] = it
+                    hashMap[it.get(0).subCategory] = it
                 }
             }, {
                 it.printStackTrace()
@@ -133,11 +145,42 @@ class LibraryCategoryActivity : AppCompatActivity() {
         }
         recyclerViewList.add(0, "All($size)")
         categoriesStrings.add(0, "All")
-        val favoriteString = addFavoriteToList()
-        favoriteString?.let {
-            categoriesStrings.add(1, "Favorites")
-            recyclerViewList.add(1, it)
-        }
+        addFavoriteToList(recyclerViewList, categoriesStrings)
+
+    }
+
+
+    private fun addFavoriteToList(
+        recyclerViewList: MutableList<String>,
+        categoriesStrings: MutableList<String>
+    ) {
+        val disposable = BabbleDatabase.getInstance().babbleTipDAO().getNotificationForFavorites()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ results ->
+                var favoriteString: String? = null
+                favoriteString =
+                    if (results.isEmpty() || intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
+                        null
+                    } else {
+                        "Favorites(${results.size})"
+                    }
+                favoriteString?.let {
+                    categoriesStrings.add(1, "Favorites")
+                    recyclerViewList.add(1, it)
+                }
+                displayRecyclerView(recyclerViewList, categoriesStrings)
+            }, {
+                it.printStackTrace()
+            })
+
+        disposables.add(disposable)
+    }
+
+    fun displayRecyclerView(
+        recyclerViewList: MutableList<String>,
+        categoriesStrings: MutableList<String>
+    ) {
         val adapter = LibraryCategoryAdapter(recyclerViewList)
         libraryCategoryRecyclerView.adapter = adapter
         libraryCategoryRecyclerView.addItemDecoration(
@@ -183,17 +226,6 @@ class LibraryCategoryActivity : AppCompatActivity() {
                     startActivity(subCategoryIntent)
                 }
             }
-        }
-    }
-
-    private fun addFavoriteToList(): String? {
-        val results =
-            Realm.getDefaultInstance().where(BabbleTip::class.java).equalTo("favorite", true)
-                .findAll()
-        if (results.isEmpty() || intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
-            return null
-        } else {
-            return "Favorites(${results.size})"
         }
     }
 

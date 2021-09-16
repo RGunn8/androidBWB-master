@@ -4,14 +4,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.learning.leap.bwb.DownloadService;
 import com.learning.leap.bwb.R;
@@ -65,7 +64,7 @@ public class DownloadActivity extends AppCompatActivity implements DownloadViewI
             TextView titleTextView = findViewById(R.id.downloadActivityTitleTextView);
             titleTextView.setText(R.string.updating);
         }
-        //startDownloadService();
+        startDownloadService();
     }
 
     @Override

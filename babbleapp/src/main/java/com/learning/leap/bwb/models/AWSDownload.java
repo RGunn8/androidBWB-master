@@ -6,6 +6,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferObserver;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState;
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.learning.leap.bwb.download.DownloadPresneterInterface;
 import com.learning.leap.bwb.model.BabbleTip;
 
@@ -89,7 +90,11 @@ public class AWSDownload {
                 ex.printStackTrace();
                 filesdownloaded++;
                 downloadFiles(filesdownloaded);
-                //downloadPresneterInterface.errorHasOccured();
+                if (ex instanceof AmazonS3Exception) {
+                    if (((AmazonS3Exception) ex).getStatusCode() != 404) {
+                        downloadPresneterInterface.errorHasOccured();
+                    }
+                }
             }
         });
     }
