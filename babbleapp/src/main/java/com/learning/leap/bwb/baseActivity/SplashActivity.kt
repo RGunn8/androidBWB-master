@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.learning.leap.bwb.R
-import com.learning.leap.bwb.UpdatedToTwoActivity
 import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.userInfo.UserInfoActivity
 import com.learning.leap.bwb.utility.Constant
@@ -44,12 +43,6 @@ class SplashActivity : AppCompatActivity() {
         } else {
             userInfoIntent()
         }
-    }
-
-    private fun updateIntent() {
-        val updateIntent = Intent(this, UpdatedToTwoActivity::class.java)
-        updateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(updateIntent)
     }
 
     private fun userInfoIntent() {

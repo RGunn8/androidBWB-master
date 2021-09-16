@@ -41,13 +41,16 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
         baseNotificationViewInterface.displayPrompt(tipAtIndex().getMessage());
         videoButtonCheck();
         soundButtonCheck();
+        displayFavorite();
     }
 
     public void setNotifications(List<BabbleTip> notificationRealmResults) {
         notifications.addAll(notificationRealmResults);
         Collections.shuffle(notifications);
         totalCount = notifications.size();
-        displayFirstTip();
+        if (notificationViewInterface != null) {
+            displayFirstTip();
+        }
     }
 
 

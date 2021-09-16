@@ -6,7 +6,12 @@ import com.learning.leap.bwb.room.BabbleDatabase;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 public class VotePresenter extends BaseNotificationPresenter {
@@ -29,13 +34,17 @@ public class VotePresenter extends BaseNotificationPresenter {
     public void onCreate() {
         setBaseNotificationViewInterface(voteViewInterface);
         babyName = baseNotificationViewInterface.babyName();
-        getRealmResults();
-        if (notifications.size() == 0) {
-            voteViewInterface.homeIntent();
-        } else {
-            displayPrompt();
-        }
-
+        Disposable disposable = getRealmResults().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe((Consumer<List<BabbleTip>>) babbleTips -> {
+                    setNotifications(babbleTips);
+                    if (notifications.size() == 0) {
+                        voteViewInterface.homeIntent();
+                    } else {
+                        displayPrompt();
+                    }
+                }, Throwable::printStackTrace);
+        disposables.add(disposable);
     }
 
     private Boolean doHomeIntent() {
@@ -63,19 +72,13 @@ public class VotePresenter extends BaseNotificationPresenter {
     }
 
     private void updateRandomNotification() {
-
-        //Todo update random notificaiton
-//        Realm realm = Realm.getDefaultInstance();
-//        realm.beginTransaction();
-//        tipAtIndex().setPlayToday(true);
-//        realm.copyToRealmOrUpdate(tipAtIndex());
-//        realm.commitTransaction();
-//        realm.beginTransaction();
-//        AnswerNotification answerNotification = new AnswerNotification();
-//        answerNotification.setAnswerBucket(bucketNumber);
-//        answerNotification.mAnswerTime = new Date();
-//        realm.copyToRealm(answerNotification);
-//        realm.commitTransaction();
+        BabbleTip tip = tipAtIndex();
+        tip.setPlayToday(true);
+        Completable.fromAction(() -> {
+            BabbleDatabase.Companion.getInstance(null).babbleTipDAO().updateTip(tip);
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
 }

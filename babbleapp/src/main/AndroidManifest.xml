@@ -63,37 +63,38 @@
         </activity>
         <activity
             android:name="com.learning.leap.bwb.userInfo.UserInfoActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.download.DownloadActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.baseActivity.HomeActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.baseActivity.DetailActivity"
             android:screenOrientation="portrait"
 
-            ></activity>
+            />
         <activity
             android:name="com.learning.leap.bwb.library.VideoActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name="com.learning.leap.bwb.settings.TipSettingsActivity"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.learning.leap.bwb.settings.SettingOptionActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.settings.WhyActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.vote.VoteViewActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:taskAffinity=""></activity>
+            android:parentActivityName=".baseActivity.HomeActivity"
+            android:taskAffinity="" />
         <activity
             android:name=".download.CongratsActivity"
             android:screenOrientation="portrait" />

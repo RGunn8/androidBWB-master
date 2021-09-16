@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -16,9 +17,9 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.utility.Constant;
-import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.vote.VoteViewActivity;
 
 
@@ -62,8 +63,10 @@ public class VoteNotificationBroadcastReciever extends BroadcastReceiver {
         voteIntent.putExtra("NumberOfTips", numOfTips);
         int id = intent.getIntExtra("id", 1);
         voteIntent.putExtra("BucketNumber", id);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addNextIntentWithParentStack(voteIntent);
         voteIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent notificationPendingIntent = PendingIntent.getActivity(context, id, voteIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(id, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
         LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);
         String babyName = saveHelper.getBabyName();
         Resources res = context.getResources();

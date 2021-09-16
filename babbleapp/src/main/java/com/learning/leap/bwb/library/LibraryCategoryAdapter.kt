@@ -27,9 +27,7 @@ class LibraryCategoryAdapter(val categories: List<String>) :
             itemOnClick?.invoke(categories[position], position)
         }
     }
-
 }
 
 class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
 }

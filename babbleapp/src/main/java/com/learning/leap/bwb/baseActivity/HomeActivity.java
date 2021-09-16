@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.learning.leap.bwb.ActionHistoryIntentService;
 import com.learning.leap.bwb.R;
-import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.library.LibraryCategoryActivity;
 import com.learning.leap.bwb.library.PlayTodayActivity;
 import com.learning.leap.bwb.settings.SettingOptionActivity;
@@ -24,7 +23,6 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 public class HomeActivity extends AppCompatActivity {
     Disposable updateDisposable;
-    private int bucketNumber = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,34 +53,8 @@ public class HomeActivity extends AppCompatActivity {
         if (Utility.isNetworkAvailable(this)) {
             ActionHistoryIntentService.startActionHistoryIntent(this);
         }
-        updateCheck();
-
     }
 
-
-    private void updateCheck() {
-//        if (BabbleUser.Companion.homeScreenAgeCheck(this) != Age){
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//            builder.setTitle(Constant.UPDATE);
-//            builder.setMessage(getString(R.string.babble_update));
-//            builder.setNegativeButton("Later", (dialog, which) -> dialog.dismiss());
-//            builder.setPositiveButton("Update", (dialog, which) -> {
-//                downloadIntent();
-//                dialog.dismiss();
-//            });
-//            builder.show();
-//        }
-    }
-
-    private void downloadIntent() {
-        runOnUiThread(() -> {
-            Intent updateIntent = new Intent(HomeActivity.this, DownloadActivity.class);
-            updateIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            updateIntent.putExtra(Constant.UPDATE, true);
-            startActivity(updateIntent);
-        });
-
-    }
 
     @Override
     protected void onDestroy() {
@@ -114,7 +86,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void detailIntent() {
         Intent detailIntent = new Intent(HomeActivity.this, LibraryCategoryActivity.class);
-        //Utility.addCustomEvent(Constant.VIEWED_LIBRARY,Utility.getUserID(this),null);
+        Utility.addCustomEvent(Constant.VIEWED_LIBRARY, Utility.getUserID(this), null, this);
         startActivity(detailIntent);
     }
 
