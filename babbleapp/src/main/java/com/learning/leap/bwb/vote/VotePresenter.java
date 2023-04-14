@@ -27,7 +27,7 @@ public class VotePresenter extends BaseNotificationPresenter {
 
     @Override
     public Single<List<BabbleTip>> getRealmResults() {
-        return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getAll();
+        return null;
     }
 
     @Override

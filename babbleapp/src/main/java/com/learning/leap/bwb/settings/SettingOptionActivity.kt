@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.baseActivity.DetailActivity
 import com.learning.leap.bwb.userInfo.UserInfoActivity
-import kotlinx.android.synthetic.main.activity_setting_option.*
 
 class SettingOptionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,14 +34,14 @@ class SettingOptionActivity : AppCompatActivity() {
         val titles = resources.getStringArray(R.array.setting_titles)
         val detailStrings = resources.getStringArray(R.array.setting_detail)
         val adapter = SettingAdapter(titles.toList(), detailStrings.toList())
-        settingsRecyclerView.adapter = adapter
-        settingsRecyclerView.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                LinearLayoutManager.VERTICAL
-            )
-        )
-        settingsRecyclerView.layoutManager = LinearLayoutManager(this)
+//        settingsRecyclerView.adapter = adapter
+//        settingsRecyclerView.addItemDecoration(
+//            DividerItemDecoration(
+//                this,
+//                LinearLayoutManager.VERTICAL
+//            )
+//        )
+        //settingsRecyclerView.layoutManager = LinearLayoutManager(this)
         adapter.itemOnClick = {
             when (it) {
                 0 -> userSettingsIntent()

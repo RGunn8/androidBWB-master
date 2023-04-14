@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.library.CategoryViewHolder
-import kotlinx.android.synthetic.main.list_item_library_category.view.*
-import kotlinx.android.synthetic.main.list_item_setting.view.*
 
 class SettingAdapter(val titleStrings: List<String>, val detailStrings: List<String>) :
     RecyclerView.Adapter<SettingViewHolder>() {
@@ -23,8 +21,8 @@ class SettingAdapter(val titleStrings: List<String>, val detailStrings: List<Str
     }
 
     override fun onBindViewHolder(holder: SettingViewHolder, position: Int) {
-        holder.itemView.settingListItemTitleTextView.text = titleStrings[position]
-        holder.itemView.settingListItemDetailTextview.text = detailStrings[position]
+//        holder.itemView.settingListItemTitleTextView.text = titleStrings[position]
+//        holder.itemView.settingListItemDetailTextview.text = detailStrings[position]
         holder.itemView.setOnClickListener {
             itemOnClick?.invoke(position)
         }

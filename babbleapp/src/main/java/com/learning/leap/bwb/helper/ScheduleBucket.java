@@ -32,7 +32,7 @@ public class ScheduleBucket {
 
     public static PendingIntent getAlarmPendingIntent(Context context) {
         Intent intent = new Intent(context, AlarmReciver.class);
-        return PendingIntent.getBroadcast(context, 10, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context,10,intent,PendingIntent.FLAG_IMMUTABLE);
     }
 
     public static void setTipsNotifications(Context context) {

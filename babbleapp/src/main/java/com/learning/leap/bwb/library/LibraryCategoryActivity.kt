@@ -16,7 +16,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_library_category.*
 
 class LibraryCategoryActivity : AppCompatActivity() {
     companion object {
@@ -39,9 +38,9 @@ class LibraryCategoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
             supportActionBar?.title = "Library Subcategories"
-            librarySubCategoryTextView.text = intent.getStringExtra(SUB_CATEGORY)
-            librarySubCategoryTextView.visibility = View.VISIBLE
-            libraryCategoryLinearLayout.visibility = View.GONE
+//            librarySubCategoryTextView.text = intent.getStringExtra(SUB_CATEGORY)
+//            librarySubCategoryTextView.visibility = View.VISIBLE
+//            libraryCategoryLinearLayout.visibility = View.GONE
             intent.getStringExtra(SUB_CATEGORY)?.let {
                 getSubCategory(it)
             }
@@ -62,16 +61,16 @@ class LibraryCategoryActivity : AppCompatActivity() {
 
     private fun getAllCategories() {
         val hashMap = mutableMapOf<String, List<BabbleTip>>()
-        val disposable =
-            BabbleDatabase.getInstance().babbleTipDAO().getAll().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    createCategoryList(it, hashMap)
-                }, {
-                    it.printStackTrace()
-                })
+//        val disposable =
+//            BabbleDatabase.getInstance().babbleTipDAO().getAll().subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    createCategoryList(it, hashMap)
+//                }, {
+//                    it.printStackTrace()
+//                })
 
-        disposables.add(disposable)
+        //disposables.add(disposable)
     }
 
     private fun getSubCategory(category: String) {
@@ -182,14 +181,14 @@ class LibraryCategoryActivity : AppCompatActivity() {
         categoriesStrings: MutableList<String>
     ) {
         val adapter = LibraryCategoryAdapter(recyclerViewList)
-        libraryCategoryRecyclerView.adapter = adapter
-        libraryCategoryRecyclerView.addItemDecoration(
-            DividerItemDecoration(
-                this,
-                LinearLayoutManager.VERTICAL
-            )
-        )
-        libraryCategoryRecyclerView.layoutManager = LinearLayoutManager(this)
+//        libraryCategoryRecyclerView.adapter = adapter
+//        libraryCategoryRecyclerView.addItemDecoration(
+//            DividerItemDecoration(
+//                this,
+//                LinearLayoutManager.VERTICAL
+//            )
+//        )
+//        libraryCategoryRecyclerView.layoutManager = LinearLayoutManager(this)
         adapter.itemOnClick = { category, position ->
             if (category.contains("All")) {
                 if (intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
