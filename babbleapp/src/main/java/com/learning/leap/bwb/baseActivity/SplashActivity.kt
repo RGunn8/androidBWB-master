@@ -4,27 +4,30 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.learning.leap.bwb.R
+import androidx.navigation.NavGraph
+import com.learning.leap.bwb.NavGraphs
 import com.learning.leap.bwb.download.DownloadActivity
+
+import com.learning.leap.bwb.splash.SplashViewModel
 import com.learning.leap.bwb.userInfo.UserInfoActivity
 import com.learning.leap.bwb.utility.Constant
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
+import com.ramcosta.composedestinations.DestinationsNavHost
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.Disposable
-import java.util.concurrent.TimeUnit
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
     private val sharedPreferencesFile = "Global"
     private var disposable: Disposable? = null
+    private val splashViewModel: SplashViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.splash_activity)
-        supportActionBar?.hide()
-        disposable = Observable.timer(2, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                goToCorrectScreen(provideSharedPref(this))
-            }
+        setContent {
+            DestinationsNavHost(navGraph = NavGraphs.root)
+        }
     }
 
     fun provideSharedPref(context: Context): SharedPreferences {

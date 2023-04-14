@@ -1,0 +1,12 @@
+{
+  "userAgent": "aws-amplify-cli/2.0",
+  "version": "1.0",
+  "storage": {
+    "plugins": {
+      "awsS3StoragePlugin": {
+        "bucket": "[leapbtob]",
+        "region": "[us-east-1]"
+      }
+    }
+  }
+}

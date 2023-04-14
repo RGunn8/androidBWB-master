@@ -21,7 +21,7 @@ public class NotificaitonPresenter extends BaseNotificationPresenter {
     public Single<List<BabbleTip>> getRealmResults() {
         babyName = baseNotificationViewInterface.babyName();
         if (isAll) {
-            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getAll();
+            return null;
             //.subscribe(this::setNotifications, Throwable::printStackTrace);
 
         } else if (isCategory) {

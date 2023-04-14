@@ -14,7 +14,6 @@ import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.utility.Constant
 import com.learning.leap.bwb.utility.Utility
-import kotlinx.android.synthetic.main.activity_age_range.*
 
 class AgeRangeActivity : AppCompatActivity() {
     lateinit var adapter: AgeRangeAdapter
@@ -35,19 +34,19 @@ class AgeRangeActivity : AppCompatActivity() {
         val saveHelper = LocalLoadSaveHelper(this)
         ageRangeBucket = saveHelper.ageRangeBucketNumber
         setUpRecyclerView()
-        ageRangeSaveButton.setOnClickListener {
-            saveHelper.saveAgeRangeBucket(adapter.selectPosition)
-            Utility.writeBoolenSharedPreferences(Constant.DID_DOWNLOAD, false, this)
-            downloadIntent()
-        }
+//        ageRangeSaveButton.setOnClickListener {
+//            saveHelper.saveAgeRangeBucket(adapter.selectPosition)
+//            Utility.writeBoolenSharedPreferences(Constant.DID_DOWNLOAD, false, this)
+//            downloadIntent()
+//        }
     }
 
     private fun setUpRecyclerView() {
         val ageRanges = resources.getStringArray(R.array.age_ranges)
         adapter = AgeRangeAdapter(ageRanges.toList(), this)
         adapter.selectPosition = ageRangeBucket
-        ageRangeRecyclerView.adapter = adapter
-        ageRangeRecyclerView.layoutManager = LinearLayoutManager(this)
+//        ageRangeRecyclerView.adapter = adapter
+//        ageRangeRecyclerView.layoutManager = LinearLayoutManager(this)
         adapter.notifyItemChanged(ageRangeBucket)
         adapter.itemOnClick = {
             Log.d("test", it.toString())
@@ -57,9 +56,9 @@ class AgeRangeActivity : AppCompatActivity() {
                 adapter.notifyItemChanged(it)
                 adapter.notifyItemChanged(oldSelectedPosition)
                 if (ageRangeBucket != adapter.selectPosition) {
-                    ageRangeSaveButton.visibility = View.VISIBLE
+                   // ageRangeSaveButton.visibility = View.VISIBLE
                 } else {
-                    ageRangeSaveButton.visibility = View.GONE
+                    //ageRangeSaveButton.visibility = View.GONE
                 }
             }
         }

@@ -54,7 +54,7 @@ public class TipReminder {
         Intent alarmIntent = new Intent(context, VoteNotificationBroadcastReciever.class);
         alarmIntent.putExtra("id", bucketNumber);
         alarmIntent.putExtra("NumberOfTips", numberOfTips);
-        return PendingIntent.getBroadcast(context.getApplicationContext(), bucketNumber, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context.getApplicationContext(), bucketNumber, alarmIntent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     public void cancelTipReminder() {

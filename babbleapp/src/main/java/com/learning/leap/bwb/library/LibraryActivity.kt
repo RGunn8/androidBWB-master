@@ -14,7 +14,6 @@ import com.learning.leap.bwb.notification.NotificaitonPresenter
 import com.learning.leap.bwb.notification.NotificationViewViewInterface
 import com.learning.leap.bwb.utility.Constant
 import com.learning.leap.bwb.utility.Utility
-import kotlinx.android.synthetic.main.activity_library.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -43,7 +42,7 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface,
     }
 
     override fun hideFavoriteButton() {
-        libraryActivityFavoriteButton.visibility = View.GONE
+        //libraryActivityFavoriteButton.visibility = View.GONE
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,19 +77,19 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface,
         notificationPresenter.onCreate()
         mediaPlayer = MediaPlayer()
 
-        libraryActivityNextImageView.setOnClickListener { notificationPresenter.onNextPress() }
-        libraryActivityPreviousImageView.setOnClickListener { notificationPresenter.onBackPress() }
-        libraryActivityPlayAudioImageView.setOnClickListener { notificationPresenter.onPlayAudioPress() }
+//        libraryActivityNextImageView.setOnClickListener { notificationPresenter.onNextPress() }
+//        libraryActivityPreviousImageView.setOnClickListener { notificationPresenter.onBackPress() }
+//        libraryActivityPlayAudioImageView.setOnClickListener { notificationPresenter.onPlayAudioPress() }
         mediaPlayer!!.setOnCompletionListener { mediaPlayer1: MediaPlayer? ->
             releaseMediaPlayer()
             isPlaying = false
         }
-        libraryActivityPlayVideoImageView.setOnClickListener { notificationPresenter.onPlayVideoPress() }
-        libraryActivityStopButton.setOnClickListener { notificationPresenter.onStopButtonPress() }
-        libraryActivityFavoriteButton.setOnClickListener {
-            favoirte = notificationPresenter.updateFavoriteForTip()
-            updateFavorite(favoirte)
-        }
+//        libraryActivityPlayVideoImageView.setOnClickListener { notificationPresenter.onPlayVideoPress() }
+//        libraryActivityStopButton.setOnClickListener { notificationPresenter.onStopButtonPress() }
+//        libraryActivityFavoriteButton.setOnClickListener {
+//            favoirte = notificationPresenter.updateFavoriteForTip()
+//            updateFavorite(favoirte)
+//        }
     }
 
     private fun releaseMediaPlayer() {
@@ -114,15 +113,15 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface,
 
     override fun updateFavorite(isFavorite: Boolean) {
         favoirte = isFavorite
-        if (isFavorite) {
-            libraryActivityFavoriteButton.setImageResource(R.drawable.heartfilled)
-        } else {
-            libraryActivityFavoriteButton.setImageResource(R.drawable.heart)
-        }
+//        if (isFavorite) {
+//            libraryActivityFavoriteButton.setImageResource(R.drawable.heartfilled)
+//        } else {
+//            libraryActivityFavoriteButton.setImageResource(R.drawable.heart)
+//        }
     }
 
     override fun displayPrompt(prompt: String) {
-        libraryActivityPromptTextView.text = prompt
+        //libraryActivityPromptTextView.text = prompt
     }
 
     override fun playSound(fileName: String) {
@@ -172,35 +171,35 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface,
     }
 
     override fun hideNextButton() {
-        libraryActivityNextImageView.visibility = View.INVISIBLE
+        //libraryActivityNextImageView.visibility = View.INVISIBLE
     }
 
     override fun hidePreviousButton() {
-        libraryActivityPreviousImageView.visibility = View.INVISIBLE
+        //libraryActivityPreviousImageView.visibility = View.INVISIBLE
     }
 
     override fun hideSoundButton() {
-        libraryActivityPlayAudioImageView.visibility = View.INVISIBLE
+        //libraryActivityPlayAudioImageView.visibility = View.INVISIBLE
     }
 
     override fun hideVideoButton() {
-        libraryActivityPlayVideoImageView.visibility = View.INVISIBLE
+       // libraryActivityPlayVideoImageView.visibility = View.INVISIBLE
     }
 
     override fun displayNextButton() {
-        libraryActivityNextImageView.visibility = View.VISIBLE
+        //libraryActivityNextImageView.visibility = View.VISIBLE
     }
 
     override fun displayPreviousButton() {
-        libraryActivityPreviousImageView.visibility = View.VISIBLE
+        //libraryActivityPreviousImageView.visibility = View.VISIBLE
     }
 
     override fun displaySoundButton() {
-        libraryActivityPlayAudioImageView.visibility = View.VISIBLE
+        //libraryActivityPlayAudioImageView.visibility = View.VISIBLE
     }
 
     override fun displayVideoButton() {
-        libraryActivityPlayVideoImageView.visibility = View.VISIBLE
+       // libraryActivityPlayVideoImageView.visibility = View.VISIBLE
     }
 
     override fun onHomePress() {
@@ -223,11 +222,11 @@ class LibraryActivity : AppCompatActivity(), NotificationViewViewInterface,
 
     override fun onLibraryPress() {}
     override fun hideStopButton() {
-        libraryActivityStopButton.visibility = View.GONE
+        //libraryActivityStopButton.visibility = View.GONE
     }
 
     override fun displayStopButton() {
-        libraryActivityStopButton.visibility = View.VISIBLE
+       // libraryActivityStopButton.visibility = View.VISIBLE
     }
 
     override fun babyName(): String {

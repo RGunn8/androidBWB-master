@@ -20,7 +20,6 @@ import com.learning.leap.bwb.utility.DynamoDBSingleton
 import com.learning.leap.bwb.utility.NetworkChecker
 import com.learning.leap.bwb.utility.Utility
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
-import kotlinx.android.synthetic.main.activity_user_info.*
 import java.util.*
 
 
@@ -76,8 +75,8 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
     }
 
     private fun setUpDateTextView() {
-        userProfileBirtdayEditText.isFocusable = false
-        userProfileBirtdayEditText.isClickable = true
+//        userProfileBirtdayEditText.isFocusable = false
+//        userProfileBirtdayEditText.isClickable = true
         val now = Calendar.getInstance()
         val dpd: DatePickerDialog = DatePickerDialog.newInstance(
             this,
@@ -91,50 +90,50 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
         dpd.setOnCancelListener {
             dialogIsShowing = false
         }
-        userProfileBirtdayEditText.setOnClickListener {
-            if (!dialogIsShowing) {
-                dialogIsShowing = true
-                dpd.show(this.supportFragmentManager, null)
-            }
-
-        }
+//        userProfileBirtdayEditText.setOnClickListener {
+//            if (!dialogIsShowing) {
+//                dialogIsShowing = true
+//                dpd.show(this.supportFragmentManager, null)
+//            }
+//
+//        }
     }
 
     private fun onClickListners() {
-        pleaseTapHereTextView.setOnClickListener { view: View? -> whyActivityIntent() }
-        userProfileSaveButton.setOnClickListener { view: View? -> saveButtonClicked() }
-        userMaleButton.setOnClickListener {
-            maleButtonSelected()
-            gender = "Male"
-        }
-
-        userFemaleButton.setOnClickListener {
-            femaleButonSelected()
-            gender = "Female"
-        }
-
-        userNotNowButton.setOnClickListener {
-            notNowSelected()
-            gender = "Not Now"
-        }
+//        pleaseTapHereTextView.setOnClickListener { view: View? -> whyActivityIntent() }
+//        userProfileSaveButton.setOnClickListener { view: View? -> saveButtonClicked() }
+//        userMaleButton.setOnClickListener {
+//            maleButtonSelected()
+//            gender = "Male"
+//        }
+//
+//        userFemaleButton.setOnClickListener {
+//            femaleButonSelected()
+//            gender = "Female"
+//        }
+//
+//        userNotNowButton.setOnClickListener {
+//            notNowSelected()
+//            gender = "Not Now"
+//        }
     }
 
     private fun notNowSelected() {
-        userMaleButton.backgroundTintList = greyBackgroundTint()
-        userFemaleButton.backgroundTintList = greyBackgroundTint()
-        userNotNowButton.backgroundTintList = darkBlueeBackgroundTint()
+//        userMaleButton.backgroundTintList = greyBackgroundTint()
+//        userFemaleButton.backgroundTintList = greyBackgroundTint()
+//        userNotNowButton.backgroundTintList = darkBlueeBackgroundTint()
     }
 
     private fun femaleButonSelected() {
-        userMaleButton.backgroundTintList = greyBackgroundTint()
-        userFemaleButton.backgroundTintList = darkBlueeBackgroundTint()
-        userNotNowButton.backgroundTintList = greyBackgroundTint()
+//        userMaleButton.backgroundTintList = greyBackgroundTint()
+//        userFemaleButton.backgroundTintList = darkBlueeBackgroundTint()
+//        userNotNowButton.backgroundTintList = greyBackgroundTint()
     }
 
     private fun maleButtonSelected() {
-        userMaleButton.backgroundTintList = darkBlueeBackgroundTint()
-        userFemaleButton.backgroundTintList = greyBackgroundTint()
-        userNotNowButton.backgroundTintList = greyBackgroundTint()
+//        userMaleButton.backgroundTintList = darkBlueeBackgroundTint()
+//        userFemaleButton.backgroundTintList = greyBackgroundTint()
+//        userNotNowButton.backgroundTintList = greyBackgroundTint()
     }
 
     private fun greyBackgroundTint(): ColorStateList? {
@@ -164,9 +163,9 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
         return BabbleUser(
             UUID.randomUUID().toString(),
             date,
-            userProfileFragmentFirstNameEditText.text.toString().trim { it <= ' ' },
+           // userProfileFragmentFirstNameEditText.text.toString().trim { it <= ' ' },
             gender,
-            optionalCode.text.toString()
+            //optionalCode.text.toString()
         )
 
     }
@@ -176,8 +175,8 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
     }
 
     override fun displayUserInfo(babbleUser: BabbleUser) {
-        userProfileBirtdayEditText.setText(babbleUser.babyBirthday)
-        userProfileFragmentFirstNameEditText.setText(babbleUser.babyName)
+//        userProfileBirtdayEditText.setText(babbleUser.babyBirthday)
+//        userProfileFragmentFirstNameEditText.setText(babbleUser.babyName)
         when (babbleUser.babyGender) {
             "Male" -> maleButtonSelected()
             "Female" -> femaleButonSelected()
@@ -225,7 +224,7 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
     override fun onDateSet(view: DatePickerDialog?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
         val correctMonth = monthOfYear + 1
         date = "$correctMonth/$dayOfMonth/$year"
-        userProfileBirtdayEditText.setText(date)
+        //userProfileBirtdayEditText.setText(date)
         dialogIsShowing = false
     }
 }

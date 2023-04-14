@@ -66,7 +66,7 @@ public class VoteNotificationBroadcastReciever extends BroadcastReceiver {
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
         stackBuilder.addNextIntentWithParentStack(voteIntent);
         voteIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(id, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent notificationPendingIntent = stackBuilder.getPendingIntent(id, PendingIntent.FLAG_IMMUTABLE);
         LocalLoadSaveHelper saveHelper = new LocalLoadSaveHelper(context);
         String babyName = saveHelper.getBabyName();
         Resources res = context.getResources();

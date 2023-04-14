@@ -80,22 +80,22 @@ public class DownloadService extends Service implements DownloadPresneterInterfa
     }
 
     private void startDownload() {
-        if (!started) {
-            AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
-            TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
-            awsDownload = new AWSDownload(this, transferUtility, this);
-            realmNotificationSubscription = BabbleDatabase.Companion.getInstance(getApplicationContext()).babbleTipDAO().getAll()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(notifications -> {
-                                awsDownload.addNotificationsFilesToList(notifications);
-                                int filesDownloadAtPaused = 0;
-                                awsDownload.downloadFiles(filesDownloadAtPaused);
-                                started = true;
-                            },
-                            throwable -> errorHasOccured());
-            disposables.add(realmNotificationSubscription);
-        }
+//        if (!started) {
+//            AmazonS3 mAmazonS3 = new AmazonS3Client(Utility.getCredientail(this));
+//            TransferUtility transferUtility = new TransferUtility(mAmazonS3, this.getApplicationContext());
+//            awsDownload = new AWSDownload(this, transferUtility, this);
+//            realmNotificationSubscription = BabbleDatabase.Companion.getInstance(getApplicationContext()).babbleTipDAO().getAll()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(notifications -> {
+//                                awsDownload.addNotificationsFilesToList(notifications);
+//                                int filesDownloadAtPaused = 0;
+//                                awsDownload.downloadFiles(filesDownloadAtPaused);
+//                                started = true;
+//                            },
+//                            throwable -> errorHasOccured());
+//            disposables.add(realmNotificationSubscription);
+//        }
     }
 
     private void updateNotifications() {

@@ -12,7 +12,6 @@ import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.library.VideoActivity
 import com.learning.leap.bwb.utility.Constant
 import com.learning.leap.bwb.utility.Utility
-import kotlinx.android.synthetic.main.fragment_vote.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -38,35 +37,35 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface,
     }
 
     override fun hideFavoriteButton() {
-        voteFragmentFavoriteButton.visibility = View.GONE
+       // voteFragmentFavoriteButton.visibility = View.GONE
     }
 
     private fun setOnClickListener() {
-        voteFragmentPlayAudioImageView.setOnClickListener { votePresenter.onPlayAudioPress() }
-        voteFragmentPlayVideoImageView.setOnClickListener { votePresenter.onPlayVideoPress() }
-        voteFragmentThumbsDownImageView.setOnClickListener {
-            Utility.addCustomEvent(
-                Constant.THUMBS_DOWN,
-                Utility.getUserID(this),
-                votePresenter.tag,
-                this
-            )
-            votePresenter.thumbDownButtonTapped()
-        }
-        voteFragmentThumbsUpImageView.setOnClickListener {
-            Utility.addCustomEvent(
-                Constant.THUMBS_UP,
-                Utility.getUserID(this),
-                votePresenter.tag,
-                this
-            )
-            votePresenter.thumbUpButtonTapped()
-        }
-        voteFragmentStopButton.setOnClickListener { votePresenter.onStopButtonPress() }
-        voteFragmentFavoriteButton.setOnClickListener {
-            favoirte = votePresenter.updateFavoriteForTip()
-            updateFavorite(favoirte)
-        }
+//        voteFragmentPlayAudioImageView.setOnClickListener { votePresenter.onPlayAudioPress() }
+//        voteFragmentPlayVideoImageView.setOnClickListener { votePresenter.onPlayVideoPress() }
+//        voteFragmentThumbsDownImageView.setOnClickListener {
+//            Utility.addCustomEvent(
+//                Constant.THUMBS_DOWN,
+//                Utility.getUserID(this),
+//                votePresenter.tag,
+//                this
+//            )
+//            votePresenter.thumbDownButtonTapped()
+//        }
+//        voteFragmentThumbsUpImageView.setOnClickListener {
+//            Utility.addCustomEvent(
+//                Constant.THUMBS_UP,
+//                Utility.getUserID(this),
+//                votePresenter.tag,
+//                this
+//            )
+//            votePresenter.thumbUpButtonTapped()
+//        }
+//        voteFragmentStopButton.setOnClickListener { votePresenter.onStopButtonPress() }
+//        voteFragmentFavoriteButton.setOnClickListener {
+//            favoirte = votePresenter.updateFavoriteForTip()
+//            updateFavorite(favoirte)
+//        }
     }
 
     override fun onPrepared(player: MediaPlayer) {
@@ -85,11 +84,11 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface,
 
     override fun updateFavorite(isFavorite: Boolean) {
         favoirte = isFavorite
-        if (isFavorite) {
-            voteFragmentFavoriteButton.setImageResource(R.drawable.heartfilled)
-        } else {
-            voteFragmentFavoriteButton.setImageResource(R.drawable.heart)
-        }
+//        if (isFavorite) {
+//            voteFragmentFavoriteButton.setImageResource(R.drawable.heartfilled)
+//        } else {
+//            voteFragmentFavoriteButton.setImageResource(R.drawable.heart)
+//        }
     }
 
     override fun homeIntent() {
@@ -106,7 +105,7 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface,
             votePresenter.tag,
             this
         )
-        voteFragmentPromptTextView.text = prompt
+        //voteFragmentPromptTextView.text = prompt
     }
 
     override fun playSound(fileName: String) {
@@ -146,27 +145,27 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface,
     }
 
     override fun displaySoundButton() {
-        voteFragmentPlayAudioImageView.visibility = View.VISIBLE
+        //voteFragmentPlayAudioImageView.visibility = View.VISIBLE
     }
 
     override fun displayVideoButton() {
-        voteFragmentPlayVideoImageView.visibility = View.VISIBLE
+       // voteFragmentPlayVideoImageView.visibility = View.VISIBLE
     }
 
     override fun hideSoundButton() {
-        voteFragmentPlayAudioImageView.visibility = View.INVISIBLE
+        //voteFragmentPlayAudioImageView.visibility = View.INVISIBLE
     }
 
     override fun hideVideoButton() {
-        voteFragmentPlayVideoImageView.visibility = View.INVISIBLE
+        //voteFragmentPlayVideoImageView.visibility = View.INVISIBLE
     }
 
     override fun hideStopButton() {
-        voteFragmentStopButton.visibility = View.GONE
+       // voteFragmentStopButton.visibility = View.GONE
     }
 
     override fun displayStopButton() {
-        voteFragmentStopButton.visibility = View.VISIBLE
+        //voteFragmentStopButton.visibility = View.VISIBLE
     }
 
     override fun stopPlayer() {

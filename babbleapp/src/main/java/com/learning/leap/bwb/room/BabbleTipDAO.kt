@@ -13,7 +13,7 @@ interface BabbleTipDAO {
     fun insertAll(notifications: List<BabbleTip>)
 
     @Query("Select * from BabbleTip")
-    fun getAll(): Single<List<BabbleTip>>
+    suspend fun SgetAll(): List<BabbleTip>
 
     @Update
     fun updateTip(vararg babbleTips: BabbleTip)
