@@ -266,7 +266,7 @@ class UserSettingViewModel @Inject constructor(
     }
 
     private fun setUserAgeInMonth(babyBirthday: String): Int {
-        val pattern = "MM/dd/yyyy"
+        val pattern = "M/dd/yyyy"
         val format = SimpleDateFormat(pattern, Locale.getDefault())
         format.isLenient = false
         format.parse(babyBirthday)?.let {
