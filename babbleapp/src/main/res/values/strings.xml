@@ -63,4 +63,5 @@
     <string name="age_rage_title">You can select the appropriate age level for your child</string>
     <string name="updating">Updating...</string>
     <string name="optional_group_code">Optional Group Code</string>
+    <string name="powered_by">Powered by</string>
 </resources>

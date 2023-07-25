@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Powered by"
+            android:text="@string/powered_by"
             android:textColor="@android:color/black"
             android:textSize="21dp" />
 
