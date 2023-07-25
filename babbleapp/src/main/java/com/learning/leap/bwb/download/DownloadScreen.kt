@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.learning.leap.bwb.R
+import com.learning.leap.bwb.destinations.CongratsScreenDestination
 import com.learning.leap.bwb.theme.BabbleTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -49,8 +51,7 @@ BabbleTheme {
             DownloadContent()
         }
         DownloadScreenState.Success -> {
-            // navigator to success
-            Log.d("Test","download was successful")
+            navigator.navigate(CongratsScreenDestination)
         }
     }
 }
@@ -71,8 +72,12 @@ fun DownloadContent(progress:Int = 0,displayError:Boolean = false, onError:() ->
                 displayAlertDialog.value = displayError
                 if (displayAlertDialog.value){
                     AlertDialog(onDismissRequest = {displayAlertDialog.value = false},
-                        title = {""}, buttons = {
-
+                        title = { stringResource(id = R.string.BabbleError)}, text = { Text(text = stringResource(
+                            id = R.string.downloadError
+                        ))}, confirmButton = {
+                            Button(onClick = {onError.invoke()}) {
+                                Text(text = "Retry")
+                            }
                     })
                 }
                 if (progress <= 50) {
@@ -84,7 +89,8 @@ fun DownloadContent(progress:Int = 0,displayError:Boolean = false, onError:() ->
                 }
                 Text(
                     text = stringResource(id = R.string.download_files_info),
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 20.sp
                 )
                 LinearProgressIndicator(progress = progress.toFloat() / 100)
 

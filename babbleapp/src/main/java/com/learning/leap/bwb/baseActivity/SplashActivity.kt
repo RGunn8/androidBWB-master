@@ -24,6 +24,9 @@ class SplashActivity : AppCompatActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (supportActionBar != null) {
+            supportActionBar!!.hide()
+        }
         setContent {
             DestinationsNavHost(navGraph = NavGraphs.root)
         }

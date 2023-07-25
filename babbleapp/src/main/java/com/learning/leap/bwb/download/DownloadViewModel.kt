@@ -42,14 +42,12 @@ init {
             val fileName = filesList[filesDownloaded]
             val file = File(fileDir,filesList[filesDownloaded])
             totalFilesToDownload = filesList.size
-            downloadTip(fileName,file) {
-                _downloadState.value = DownloadScreenState.Success
-            }
+            downloadTip(fileName,file)
         }
 
     }
 
-    private fun downloadTip(fileName:String, file:File, onTipDownloadCompleted: () -> Unit){
+    private fun downloadTip(fileName:String, file:File){
         val observer = transferUtility.download(
             BUCKET_NAME,fileName,file
         )
@@ -58,7 +56,7 @@ init {
                 if (state == TransferState.COMPLETED) {
                     filesDownloaded++
                     _downloadState.value = DownloadScreenState.Downloading(getProgress())
-                    downloadNextItem(onTipDownloadCompleted)
+                    downloadNextItem()
                 }
             }
 
@@ -70,19 +68,18 @@ init {
                 }else {
                     ex?.printStackTrace()
                     filesDownloaded++
-                    downloadNextItem(onTipDownloadCompleted)
+                    downloadNextItem()
                 }
             }
 
         })
     }
 
-    fun downloadNextItem(onTipDownloadCompleted: () -> Unit){
+    fun downloadNextItem(){
         if (totalFilesToDownload == filesDownloaded){
-            onTipDownloadCompleted.invoke()
+            _downloadState.value = DownloadScreenState.Success
         }else{
-            downloadTip(filesList[filesDownloaded],File(fileDir,filesList[filesDownloaded])) {
-            }
+            downloadTip(filesList[filesDownloaded],File(fileDir,filesList[filesDownloaded]))
         }
     }
 
