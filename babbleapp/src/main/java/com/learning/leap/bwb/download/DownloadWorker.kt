@@ -18,7 +18,6 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
 import com.amazonaws.services.s3.model.AmazonS3Exception
 import com.amplifyframework.core.Amplify
-import com.amplifyframework.storage.StorageException
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.model.BabbleTip
@@ -49,7 +48,7 @@ class DownloadWorker @AssistedInject constructor(
     private val filesToDownloads = ArrayList<String>()
     override suspend fun doWork(): Result {
         return try {
-            val tips = babbleDatabase.babbleTipDAO().SgetAll()
+            val tips = babbleDatabase.babbleTipDAO().getAll()
             for (notification in tips) {
                 if (notification.soundFileName != "no file") {
                     addFileToArray(notification.created, notification.soundFileName)
@@ -170,7 +169,7 @@ class DownloadWorker @AssistedInject constructor(
     }
 
     private fun canDownload(): Boolean {
-        return totalCount != 0 && !filesToDownloads.isEmpty()
+        return totalCount != 0 && filesToDownloads.isNotEmpty()
     }
 
     private fun addFileToArray(dateCreated: String, name: String) {
@@ -178,81 +177,51 @@ class DownloadWorker @AssistedInject constructor(
         filesToDownloads.add(fileName)
     }
 
-    fun downloadFiles(indexOfNextDownloadFile: Int, callback: (DownloadWorkerState) -> Unit) {
+
+    fun downloadFiles(indexOfNextDownloadFile: Int, callback: (DownloadWorkerState) -> Unit) : Result {
         val fileName: String = filesToDownloads[indexOfNextDownloadFile]
         val file = File(context.filesDir, fileName)
-           Amplify.Storage.downloadFile(fileName, file,{
-                if (downloadHasNotCompleted()) {
+        val observer: TransferObserver = transferUtility.download(
+            BUCKET_NAME,  /* The bucket to download from */
+            fileName,  /* The key for the object to download */
+            file /* The file to download the object to */
+        )
+        observer.setTransferListener(object : TransferListener {
+            override fun onStateChanged(id: Int, state: TransferState) {
+                if (state == TransferState.COMPLETED) {
+                    //downloadPresneterInterface.updateProgress(getProgress())
+                    if (downloadHasNotCompleted()) {
                         filesdownloaded++
-                        downloadFiles(filesdownloaded){
+                        downloadFiles(filesdownloaded) {
 
                         }
-
+                        callback.invoke(DownloadWorkerState.Progress(getProgress()))
                     } else {
 
                         callback.invoke(DownloadWorkerState.Done)
                        // downloadPresneterInterface.downloadCompleted()
                     }
-            },{ ex ->
+                }
+            }
+
+            override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
+               // callback.invoke(DownloadWorkerState.Progress())
+            }
+            override fun onError(id: Int, ex: Exception) {
                 ex.printStackTrace()
                 filesdownloaded++
                 downloadFiles(filesdownloaded) {
 
                 }
-
-//                    if (ex.statusCode != 404 || ex.statusCode!= 416) {
-//                        callback.invoke(DownloadWorkerState.Error)
-//                }
-            })
-
-
+                if (ex is AmazonS3Exception) {
+                    if (ex.statusCode != 404 || ex.statusCode!= 416) {
+                        callback.invoke(DownloadWorkerState.Error)
+                    }
+                }
+            }
+        })
+        return Result.success()
     }
-
-
-//    fun downloadFiles(indexOfNextDownloadFile: Int, callback: (DownloadWorkerState) -> Unit) : Result {
-//        val fileName: String = filesToDownloads[indexOfNextDownloadFile]
-//        val file = File(context.filesDir, fileName)
-//        val observer: TransferObserver = transferUtility.download(
-//            BUCKET_NAME,  /* The bucket to download from */
-//            fileName,  /* The key for the object to download */
-//            file /* The file to download the object to */
-//        )
-//        observer.setTransferListener(object : TransferListener {
-//            override fun onStateChanged(id: Int, state: TransferState) {
-//                if (state == TransferState.COMPLETED) {
-//                    //downloadPresneterInterface.updateProgress(getProgress())
-//                    if (downloadHasNotCompleted()) {
-//                        filesdownloaded++
-//                        downloadFiles(filesdownloaded) {
-//
-//                        }
-//                        callback.invoke(DownloadWorkerState.Progress(getProgress()))
-//                    } else {
-//
-//                        callback.invoke(DownloadWorkerState.Done)
-//                       // downloadPresneterInterface.downloadCompleted()
-//                    }
-//                }
-//            }
-//
-//            override fun onProgressChanged(id: Int, bytesCurrent: Long, bytesTotal: Long) {
-//               // callback.invoke(DownloadWorkerState.Progress())
-//            }
-//            override fun onError(id: Int, ex: Exception) {
-//                ex.printStackTrace()
-//                filesdownloaded++
-//                downloadFiles(filesdownloaded) {
-//
-//                }
-//                if (ex is AmazonS3Exception) {
-//                    if (ex.statusCode != 404 || ex.statusCode!= 416) {
-//                        callback.invoke(DownloadWorkerState.Error)
-//                    }
-//                }
-//            }
-//        })
-//        return Result.success()
-//    }
 
     private fun getProgress(): Int {
         val progress: Double = filesdownloaded.toDouble() / totalCount.toDouble()

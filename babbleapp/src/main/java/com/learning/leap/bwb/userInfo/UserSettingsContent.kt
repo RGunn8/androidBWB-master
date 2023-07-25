@@ -192,6 +192,7 @@ fun UserSettingContent(
     val context = LocalContext.current
 
     Scaffold() {
+        it.calculateBottomPadding()
         Box(
             modifier = Modifier
                 .fillMaxSize()

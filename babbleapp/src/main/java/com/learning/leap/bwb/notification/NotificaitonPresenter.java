@@ -25,13 +25,13 @@ public class NotificaitonPresenter extends BaseNotificationPresenter {
             //.subscribe(this::setNotifications, Throwable::printStackTrace);
 
         } else if (isCategory) {
-            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getNotificationForCategory(category);
+            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getTipsForCategory(category);
             //.subscribe(this::setNotifications, Throwable::printStackTrace);
         } else if (isFavorite) {
-            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getNotificationForFavorites();
+            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getTipsForFavorites();
 
         } else {
-            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getNotificationFromSubCategory(subCategory);
+            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getTipsFromSubCategory(subCategory);
 
         }
     }

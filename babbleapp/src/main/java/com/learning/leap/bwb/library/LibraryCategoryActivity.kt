@@ -4,11 +4,8 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.room.BabbleDatabase
@@ -76,7 +73,7 @@ class LibraryCategoryActivity : AppCompatActivity() {
     private fun getSubCategory(category: String) {
         val hashMap = mutableMapOf<String, List<BabbleTip>>()
         val disposable =
-            BabbleDatabase.getInstance().babbleTipDAO().getNotificationForCategory(category)
+            BabbleDatabase.getInstance().babbleTipDAO().getTipsForCategory(category)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -153,7 +150,7 @@ class LibraryCategoryActivity : AppCompatActivity() {
         recyclerViewList: MutableList<String>,
         categoriesStrings: MutableList<String>
     ) {
-        val disposable = BabbleDatabase.getInstance().babbleTipDAO().getNotificationForFavorites()
+        val disposable = BabbleDatabase.getInstance().babbleTipDAO().getTipsForFavorites()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ results ->

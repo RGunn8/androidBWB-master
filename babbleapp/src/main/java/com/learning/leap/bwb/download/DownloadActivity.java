@@ -18,7 +18,7 @@ import com.learning.leap.bwb.baseActivity.HomeActivity;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
-public class DownloadActivity extends AppCompatActivity implements DownloadViewInterface {
+public class DownloadActivity extends AppCompatActivity {
     DownloadService downloadService;
     ProgressBar progressBar;
     TextView downloadPercentTextView;
@@ -47,10 +47,10 @@ public class DownloadActivity extends AppCompatActivity implements DownloadViewI
         bindService(downloadServiceIntent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
-    @Override
-    public boolean comingFromAgeRange() {
-        return getIntent().getBooleanExtra(Constant.COME_FROM_AGE_RANGE, false);
-    }
+//    @Override
+//    public boolean comingFromAgeRange() {
+//        return getIntent().getBooleanExtra(Constant.COME_FROM_AGE_RANGE, false);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,40 +96,40 @@ public class DownloadActivity extends AppCompatActivity implements DownloadViewI
         downloadPercentTextView = findViewById(R.id.downloadTextPercentage);
     }
 
-    @Override
-    public void displayErrorMessage() {
-        if (bound) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(getString(R.string.BabbleError));
-            builder.setMessage(getString(R.string.downloadError));
-            builder.setNegativeButton("Close", (dialog, which) -> DownloadActivity.this.finish());
-            builder.setPositiveButton("Retry", (dialogInterface, i) -> startDownloadService());
-            builder.show();
-        }
-    }
-
-    @Override
-    public void updateProgressBar(int progress) {
-        if (bound) {
-            progressBar.setProgress(progress);
-            String downloadPercent = progress + "%";
-            downloadPercentTextView.setText(downloadPercent);
-        }
-    }
-
-    @Override
-    public void downloadCompleted() {
-        if (bound) {
-            if (getIntent().getBooleanExtra(Constant.COME_FROM_AGE_RANGE, false)) {
-                Intent homeIntent = new Intent(this, HomeActivity.class);
-                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(homeIntent);
-            } else {
-                Intent congratsIntent = new Intent(this, CongratsActivity.class);
-                congratsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(congratsIntent);
-            }
-        }
-    }
+//    @Override
+//    public void displayErrorMessage() {
+//        if (bound) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle(getString(R.string.BabbleError));
+//            builder.setMessage(getString(R.string.downloadError));
+//            builder.setNegativeButton("Close", (dialog, which) -> DownloadActivity.this.finish());
+//            builder.setPositiveButton("Retry", (dialogInterface, i) -> startDownloadService());
+//            builder.show();
+//        }
+//    }
+//
+//    @Override
+//    public void updateProgressBar(int progress) {
+//        if (bound) {
+//            progressBar.setProgress(progress);
+//            String downloadPercent = progress + "%";
+//            downloadPercentTextView.setText(downloadPercent);
+//        }
+//    }
+//
+//    @Override
+//    public void downloadCompleted() {
+//        if (bound) {
+//            if (getIntent().getBooleanExtra(Constant.COME_FROM_AGE_RANGE, false)) {
+//                Intent homeIntent = new Intent(this, HomeActivity.class);
+//                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(homeIntent);
+//            } else {
+//                Intent congratsIntent = new Intent(this, CongratsActivity.class);
+//                congratsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(congratsIntent);
+//            }
+//        }
+//    }
 
 }

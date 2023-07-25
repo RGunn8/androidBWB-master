@@ -43,15 +43,6 @@ public class BabbleApplication extends Application implements Configuration.Prov
     public void onCreate() {
         super.onCreate();
         AndroidThreeTen.init(this);
-        try {
-            Amplify.addPlugin(new AWSS3StoragePlugin());
-            Amplify.configure(getApplicationContext());
-
-            Log.i("MyAmplifyApp", "Initialized Amplify");
-        } catch (AmplifyException e) {
-            Log.e("MyAmplifyApp", "Could not initialize Amplify", e);
-        }
-
         Sentry.init("https://304314b3ecda47fe9439012d7bfbcd61@sentry.io/2888418", new AndroidSentryClientFactory(this));
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 

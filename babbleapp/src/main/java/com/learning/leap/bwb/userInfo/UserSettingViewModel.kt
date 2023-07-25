@@ -1,7 +1,6 @@
 package com.learning.leap.bwb.userInfo
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,15 +9,11 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
-import com.learning.leap.bwb.R
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.model.BabbleUser
 import com.learning.leap.bwb.room.BabbleDatabase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,7 +21,6 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
 import org.threeten.bp.temporal.ChronoUnit
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -100,7 +94,7 @@ class UserSettingViewModel @Inject constructor(
     private suspend fun updateTips(notifications: List<BabbleTip>){
         withContext(Dispatchers.IO){
             localLoadSaveHelper.saveNotificationSize(notifications.size)
-            babbleDatabase.babbleTipDAO().deleteAllNotifications()
+            babbleDatabase.babbleTipDAO().deleteAllTips()
             babbleDatabase.babbleTipDAO().insertAll(notifications)
             _saveSuccessful.postValue(true)
         }

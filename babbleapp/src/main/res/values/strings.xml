@@ -19,7 +19,9 @@
     <string name="okay">OK</string>
     <string name="noPromptsForUser">There were no prompts for the baby\'s age.  Please try again.</string>
     <string name="downloadError">Error downloading.  Please try again."</string>
+    <string name="download_in_progress">Download In Progress…</string>
     <string name="almostDone">Almost Done…</string>
+    <string name="wrapping_up">Wrapping Up…</string>
     <string name="allTipsSentBetween">First Tip Reminder</string>
     <string name="MaxNumberOfTips">Number of Tips To Send Per Reminder</string>
     <string name="sendTipsToday">Send Tips Today</string>

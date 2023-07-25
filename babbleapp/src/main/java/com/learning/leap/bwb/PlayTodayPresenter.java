@@ -14,7 +14,7 @@ public class PlayTodayPresenter extends BaseNotificationPresenter {
     @Override
     public Single<List<BabbleTip>> getRealmResults() {
         babyName = notificationViewInterface.babyName();
-        return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getNotificationForPlayToday();
+        return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getTipsForPlayToday();
     }
 
 }
