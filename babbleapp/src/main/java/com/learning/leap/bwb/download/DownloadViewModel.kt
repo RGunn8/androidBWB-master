@@ -1,5 +1,9 @@
 package com.learning.leap.bwb.download
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
@@ -7,6 +11,7 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.amazonaws.services.s3.model.AmazonS3Exception
 import com.learning.leap.bwb.room.BabbleDatabase
+import com.learning.leap.bwb.utility.Constant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +24,8 @@ import kotlin.math.roundToInt
 class DownloadViewModel @Inject constructor(
     private val transferUtility:TransferUtility,
     private val database: BabbleDatabase,
-    private val fileDir: File
+    private val fileDir: File,
+    private val dataStore: DataStore<Preferences>,
 ):ViewModel() {
     private var totalFilesToDownload = 0
     private var filesDownloaded = 0
@@ -77,7 +83,12 @@ init {
 
     fun downloadNextItem(){
         if (totalFilesToDownload == filesDownloaded){
-            _downloadState.value = DownloadScreenState.Success
+            viewModelScope.launch {
+                dataStore.edit { pref ->
+                    pref[booleanPreferencesKey(Constant.DID_DOWNLOAD)] = true
+                }
+                _downloadState.value = DownloadScreenState.Success
+            }
         }else{
             downloadTip(filesList[filesDownloaded],File(fileDir,filesList[filesDownloaded]))
         }

@@ -1,6 +1,11 @@
 package com.learning.leap.bwb.userInfo
 
 import android.content.SharedPreferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +18,7 @@ import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.model.BabbleUser
 import com.learning.leap.bwb.room.BabbleDatabase
+import com.learning.leap.bwb.utility.Constant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,15 +28,16 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
 import org.threeten.bp.temporal.ChronoUnit
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.math.floor
 
 @HiltViewModel
 class UserSettingViewModel @Inject constructor(
     private val mapper: DynamoDBMapper,
-    private val sharedPreferences: SharedPreferences,
-    private val localLoadSaveHelper: LocalLoadSaveHelper,
+    private val dataStore: DataStore<Preferences>,
     private val babbleDatabase: BabbleDatabase
 ) : ViewModel() {
 
@@ -93,7 +100,9 @@ class UserSettingViewModel @Inject constructor(
 
     private suspend fun updateTips(notifications: List<BabbleTip>){
         withContext(Dispatchers.IO){
-            localLoadSaveHelper.saveNotificationSize(notifications.size)
+            dataStore.edit {pref ->
+                pref[intPreferencesKey(Constant.NOTIFICATION_SIZE)] = notifications.size
+            }
             babbleDatabase.babbleTipDAO().deleteAllTips()
             babbleDatabase.babbleTipDAO().insertAll(notifications)
             _saveSuccessful.postValue(true)
@@ -130,7 +139,7 @@ class UserSettingViewModel @Inject constructor(
                         }
 
                     }
-                    saveCurrentBabblePlayerSharedPreference(localLoadSaveHelper, isNewUser)
+                    saveCurrentBabblePlayerSharedPreference(isNewUser)
                 } else if (checkNameIsEmpty()) {
                     _state.postValue(state.value?.copy(error = UserSettingError.EmptyName()))
                     _showDialog.value = true
@@ -168,20 +177,23 @@ class UserSettingViewModel @Inject constructor(
     }
 
     private fun saveCurrentBabblePlayerSharedPreference(
-        saveHelper: LocalLoadSaveHelper,
         isNewUser: Boolean
     ) {
-        state.value?.let {
-            val ageInMonth = setUserAgeInMonth(it.birthday)
-            saveHelper.saveBabyBirthDay(it.birthday)
-            saveHelper.saveUserBirthDayInMonth(ageInMonth)
-            saveHelper.saveBabyName(it.userName)
-            saveHelper.saveBabyGender(it.gender.name)
-            saveHelper.saveGroupCode(it.groupCode)
-            val ageRangeBucket = getAgeRangeBucket(ageInMonth)
-            saveHelper.saveAgeRangeBucket(ageRangeBucket)
-            if (isNewUser) {
-                saveHelper.saveBabbleID(UUID.randomUUID().toString())
+        viewModelScope.launch {
+            state.value?.let {
+                dataStore.edit { pref ->
+                    val ageInMonth = setUserAgeInMonth(it.birthday)
+                    pref[stringPreferencesKey(Constant.BABY_BIRTHDAY)] = it.birthday
+                    pref[intPreferencesKey(Constant.USER_BDAY_IN_MONTH)] = ageInMonth
+                    pref[stringPreferencesKey(Constant.BABY_NAME)] = it.userName
+                    pref[stringPreferencesKey(Constant.GENDER)] = it.gender.name
+                    pref[stringPreferencesKey(Constant.GROUP_CODE)] = it.groupCode
+                    pref[intPreferencesKey(Constant.AGE_RANGE_BUCKET)] = getAgeRangeBucket(ageInMonth)
+                    if (isNewUser){
+                        pref[stringPreferencesKey(Constant.BABBLE_ID)] = UUID.randomUUID().toString()
+                    }
+
+                }
             }
         }
 
