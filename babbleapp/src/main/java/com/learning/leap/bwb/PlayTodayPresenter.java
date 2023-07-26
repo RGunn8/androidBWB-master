@@ -11,11 +11,7 @@ import io.reactivex.rxjava3.core.Single;
 
 public class PlayTodayPresenter extends BaseNotificationPresenter {
 
-    @Override
-    public Single<List<BabbleTip>> getRealmResults() {
-        babyName = notificationViewInterface.babyName();
-        return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getTipsForPlayToday();
-    }
+
 
 }
 

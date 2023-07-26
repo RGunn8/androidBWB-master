@@ -99,12 +99,12 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface,
     }
 
     override fun displayPrompt(prompt: String) {
-        Utility.addCustomEvent(
-            Constant.VIEWED_NOTIFICATIONS,
-            Utility.getUserID(this),
-            votePresenter.tag,
-            this
-        )
+//        Utility.addCustomEvent(
+//            Constant.VIEWED_NOTIFICATIONS,
+//            Utility.getUserID(this),
+//            votePresenter.tag,
+//            this
+//        )
         //voteFragmentPromptTextView.text = prompt
     }
 
@@ -119,12 +119,12 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface,
 
     @Throws(Exception::class)
     private fun setupMediaFile(fileName: String) {
-        Utility.addCustomEvent(
-            Constant.PLAYED_SOUND,
-            Utility.getUserID(this),
-            votePresenter.tag,
-            this
-        )
+//        Utility.addCustomEvent(
+//            Constant.PLAYED_SOUND,
+//            Utility.getUserID(this),
+//            votePresenter.tag,
+//            this
+//        )
         val file = File(this.filesDir, fileName)
         val `is` = FileInputStream(file)
         mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -135,12 +135,12 @@ class VoteViewActivity : AppCompatActivity(), VoteViewViewInterface,
     }
 
     override fun playVideo(fileName: String) {
-        Utility.addCustomEvent(
-            Constant.PLAYED_VIDEO,
-            Utility.getUserID(this),
-            votePresenter.tag,
-            this
-        )
+//        Utility.addCustomEvent(
+//            Constant.PLAYED_VIDEO,
+//            Utility.getUserID(this),
+//            votePresenter.tag,
+//            this
+//        )
         VideoActivity.showRemoteVideo(this, fileName)
     }
 

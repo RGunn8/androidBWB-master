@@ -16,27 +16,27 @@ interface BabbleTipDAO {
     suspend fun getAll(): List<BabbleTip>
 
     @Update
-    fun updateTip(vararg babbleTips: BabbleTip)
+    suspend fun updateTip(vararg babbleTips: BabbleTip)
 
     @Query("DELETE FROM BabbleTip")
-    fun deleteAllTips()
+    suspend fun deleteAllTips()
 
     @Query("Select * From BabbleTip where category  = :category")
-    fun getTipsForCategory(category: String): Single<List<BabbleTip>>
+    suspend fun getTipsForCategory(category: String): List<BabbleTip>
 
     @Query("Select * from BabbleTip where subCategory = :subCategory")
-    fun getTipsFromSubCategory(subCategory: String): Single<List<BabbleTip>>
+    suspend fun getTipsFromSubCategory(subCategory: String): List<BabbleTip>
 
 
     @Query("SELECT category  FROM BabbleTip GROUP BY category")
-    fun getCategories(): Single<List<String>>
+    suspend fun getCategories(): List<String>
 
     @Query("SELECT subCategory  FROM BabbleTip where category = :category GROUP BY subCategory")
-    fun getSubCategories(category: String): Single<List<String>>
+    suspend fun getSubCategories(category: String): List<String>
 
     @Query("Select * from BabbleTip where favorite = 1")
-    fun getTipsForFavorites(): Single<List<BabbleTip>>
+    suspend fun getTipsForFavorites(): List<BabbleTip>
 
     @Query("Select * from BabbleTip where playToday = 1")
-    fun getTipsForPlayToday(): Single<List<BabbleTip>>
+    suspend fun getTipsForPlayToday(): List<BabbleTip>
 }

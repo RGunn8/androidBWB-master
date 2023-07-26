@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.learning.leap.bwb.R
+import com.learning.leap.bwb.destinations.LibraryCategoryScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
@@ -63,7 +64,7 @@ fun HomeScreen(navigator: DestinationsNavigator){
                     contentDescription = " Background",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.clickable {
-                        // open library
+                        navigator.navigate(LibraryCategoryScreenDestination(isSubCategory = false))
                     }
                 )
             }

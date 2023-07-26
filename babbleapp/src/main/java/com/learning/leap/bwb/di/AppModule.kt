@@ -105,7 +105,7 @@ object AppModule {
             ),
             migrations = listOf(SharedPreferencesMigration(appContext.applicationContext,"Global")),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { appContext.applicationContext.dataStoreFile("DataStore")}
+            produceFile = { appContext.applicationContext.dataStoreFile("DataStore.preferences_pb")}
         )
 
     }

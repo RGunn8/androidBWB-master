@@ -71,18 +71,18 @@ class LibraryCategoryActivity : AppCompatActivity() {
     }
 
     private fun getSubCategory(category: String) {
-        val hashMap = mutableMapOf<String, List<BabbleTip>>()
-        val disposable =
-            BabbleDatabase.getInstance().babbleTipDAO().getTipsForCategory(category)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    createSubCategoryList(it, hashMap)
-                }, {
-                    it.printStackTrace()
-                })
-
-        disposables.add(disposable)
+//        val hashMap = mutableMapOf<String, List<BabbleTip>>()
+//        val disposable =
+//            BabbleDatabase.getInstance().babbleTipDAO().getTipsForCategory(category)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    createSubCategoryList(it, hashMap)
+//                }, {
+//                    it.printStackTrace()
+//                })
+//
+//        disposables.add(disposable)
     }
 
     private fun getCategoryString(isSubCategory: Boolean, babbleTip: BabbleTip): String {
@@ -150,27 +150,27 @@ class LibraryCategoryActivity : AppCompatActivity() {
         recyclerViewList: MutableList<String>,
         categoriesStrings: MutableList<String>
     ) {
-        val disposable = BabbleDatabase.getInstance().babbleTipDAO().getTipsForFavorites()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ results ->
-                var favoriteString: String? = null
-                favoriteString =
-                    if (results.isEmpty() || intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
-                        null
-                    } else {
-                        "Favorites(${results.size})"
-                    }
-                favoriteString?.let {
-                    categoriesStrings.add(1, "Favorites")
-                    recyclerViewList.add(1, it)
-                }
-                displayRecyclerView(recyclerViewList, categoriesStrings)
-            }, {
-                it.printStackTrace()
-            })
-
-        disposables.add(disposable)
+//        val disposable = BabbleDatabase.getInstance().babbleTipDAO().getTipsForFavorites()
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({ results ->
+//                var favoriteString: String? = null
+//                favoriteString =
+//                    if (results.isEmpty() || intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
+//                        null
+//                    } else {
+//                        "Favorites(${results.size})"
+//                    }
+//                favoriteString?.let {
+//                    categoriesStrings.add(1, "Favorites")
+//                    recyclerViewList.add(1, it)
+//                }
+//                displayRecyclerView(recyclerViewList, categoriesStrings)
+//            }, {
+//                it.printStackTrace()
+//            })
+//
+//        disposables.add(disposable)
     }
 
     fun displayRecyclerView(
@@ -186,43 +186,43 @@ class LibraryCategoryActivity : AppCompatActivity() {
 //            )
 //        )
 //        libraryCategoryRecyclerView.layoutManager = LinearLayoutManager(this)
-        adapter.itemOnClick = { category, position ->
-            if (category.contains("All")) {
-                if (intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
-                    val categoryIntent = Intent(this, LibraryActivity::class.java)
-                    categoryIntent.putExtra(LibraryActivity.IS_CATEGORY, true)
-                    categoryIntent.putExtra(
-                        LibraryActivity.LIBRARY_CATEGORY,
-                        intent.getStringExtra(LibraryCategoryActivity.SUB_CATEGORY)
-                    )
-                    startActivity(categoryIntent)
-                } else {
-                    val allIntent = Intent(this, LibraryActivity::class.java)
-                    allIntent.putExtra(LibraryActivity.IS_ALL, true)
-                    startActivity(allIntent)
-                }
-
-            } else if (category.contains("Favorites")) {
-                val favoriteIntent = Intent(this, LibraryActivity::class.java)
-                favoriteIntent.putExtra(LibraryActivity.IS_FAVORITE, true)
-                startActivity(favoriteIntent)
-            } else {
-                if (!intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
-                    val subCategoryIntent = Intent(this, LibraryCategoryActivity::class.java)
-                    subCategoryIntent.putExtra(HAS_SUB_CATEGORY, true)
-                    subCategoryIntent.putExtra(SUB_CATEGORY, categoriesStrings[position])
-                    startActivity(subCategoryIntent)
-                } else {
-                    val subCategoryIntent = Intent(this, LibraryActivity::class.java)
-                    subCategoryIntent.putExtra(LibraryActivity.IS_SUB_CATEGORY, true)
-                    subCategoryIntent.putExtra(
-                        LibraryActivity.LIBRARY_SUB_CATEGORY,
-                        categoriesStrings[position]
-                    )
-                    startActivity(subCategoryIntent)
-                }
-            }
-        }
+//        adapter.itemOnClick = { category, position ->
+//            if (category.contains("All")) {
+//                if (intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
+//                    val categoryIntent = Intent(this, LibraryActivity::class.java)
+//                    categoryIntent.putExtra(LibraryActivity.IS_CATEGORY, true)
+//                    categoryIntent.putExtra(
+//                        LibraryActivity.LIBRARY_CATEGORY,
+//                        intent.getStringExtra(LibraryCategoryActivity.SUB_CATEGORY)
+//                    )
+//                    startActivity(categoryIntent)
+//                } else {
+//                    val allIntent = Intent(this, LibraryActivity::class.java)
+//                    allIntent.putExtra(LibraryActivity.IS_ALL, true)
+//                    startActivity(allIntent)
+//                }
+//
+//            } else if (category.contains("Favorites")) {
+//                val favoriteIntent = Intent(this, LibraryActivity::class.java)
+//                favoriteIntent.putExtra(LibraryActivity.IS_FAVORITE, true)
+//                startActivity(favoriteIntent)
+//            } else {
+//                if (!intent.getBooleanExtra(HAS_SUB_CATEGORY, false)) {
+//                    val subCategoryIntent = Intent(this, LibraryCategoryActivity::class.java)
+//                    subCategoryIntent.putExtra(HAS_SUB_CATEGORY, true)
+//                    subCategoryIntent.putExtra(SUB_CATEGORY, categoriesStrings[position])
+//                    startActivity(subCategoryIntent)
+//                } else {
+//                    val subCategoryIntent = Intent(this, LibraryActivity::class.java)
+//                    subCategoryIntent.putExtra(LibraryActivity.IS_SUB_CATEGORY, true)
+//                    subCategoryIntent.putExtra(
+//                        LibraryActivity.LIBRARY_SUB_CATEGORY,
+//                        categoriesStrings[position]
+//                    )
+//                    startActivity(subCategoryIntent)
+//                }
+//            }
+//        }
     }
 
     override fun onDestroy() {

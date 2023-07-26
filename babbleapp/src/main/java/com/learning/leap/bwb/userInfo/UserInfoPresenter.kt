@@ -99,7 +99,7 @@ class UserInfoPresenter(
     private fun saveNotifications(notifications: List<BabbleTip>) {
         saveHelper.saveNotificationSize(notifications.size)
         val result = Completable.fromAction {
-            BabbleDatabase.getInstance().babbleTipDAO().deleteAllTips()
+//            BabbleDatabase.getInstance().babbleTipDAO().deleteAllTips()
             BabbleDatabase.getInstance().babbleTipDAO().insertAll(notifications)
         }
             .subscribeOn(Schedulers.io())

@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.learning.leap.bwb.R
+import com.learning.leap.bwb.destinations.HomeScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
@@ -55,7 +56,7 @@ fun CongratsScreen(navigator:DestinationsNavigator){
                 painter = painterResource(id = R.drawable.congrat_continue),
                 contentDescription = "Congrats Continue Button",
                 modifier = Modifier.padding(top = 30.dp).clickable {
-
+                    navigator.navigate(HomeScreenDestination())
                 }
             )
 

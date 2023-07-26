@@ -62,6 +62,7 @@
         <activity
             android:name="com.learning.leap.bwb.baseActivity.SplashActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.Splash"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"
             >

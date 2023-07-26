@@ -17,24 +17,7 @@ public class NotificaitonPresenter extends BaseNotificationPresenter {
     public String category;
     public String subCategory;
 
-    @Override
-    public Single<List<BabbleTip>> getRealmResults() {
-        babyName = baseNotificationViewInterface.babyName();
-        if (isAll) {
-            return null;
-            //.subscribe(this::setNotifications, Throwable::printStackTrace);
 
-        } else if (isCategory) {
-            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getTipsForCategory(category);
-            //.subscribe(this::setNotifications, Throwable::printStackTrace);
-        } else if (isFavorite) {
-            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getTipsForFavorites();
-
-        } else {
-            return BabbleDatabase.Companion.getInstance(null).babbleTipDAO().getTipsFromSubCategory(subCategory);
-
-        }
-    }
 
 
 }
