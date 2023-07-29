@@ -34,8 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.learning.leap.bwb.BackButton
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.destinations.LibraryCategoryScreenDestination
+import com.learning.leap.bwb.destinations.LibraryTipScreenDestination
+import com.learning.leap.bwb.library.LibraryScreenType
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -53,20 +56,22 @@ fun LibraryCategoryScreen(navigator: DestinationsNavigator,
       viewModel.getLibraryCategories()
   }
     Column(modifier = Modifier.fillMaxSize()) {
-        IconButton(onClick = {
-            navigator.navigateUp()
-        }, modifier = Modifier.padding(8.dp)) {
-            Icon(Icons.Filled.ArrowBack, "")
-        }
+    BackButton {
+        navigator.popBackStack()
+    }
         LibraryCategoryContent(
             isSubCategory,
             subCategoryString,
             pairs = pairsList.value,
             onItemClick = { category ->
-                if (category == "All" || category == "Favorites") {
-                    // navigate to library screen
-                } else if (isSubCategory) {
-                    // navigator to libary screen with category screen
+                if (category == "All" && !isSubCategory) {
+                    navigator.navigate(LibraryTipScreenDestination(LibraryScreenType.ALLTIPS))
+                } else if (category == "Favorites"){
+                    navigator.navigate(LibraryTipScreenDestination(LibraryScreenType.FAVORITE))
+                } else if (category == "All" && isSubCategory) {
+                    navigator.navigate(LibraryTipScreenDestination(LibraryScreenType.ALLSUBCATEGORY,subCategoryString))
+                }else if (isSubCategory) {
+                    navigator.navigate(LibraryTipScreenDestination(LibraryScreenType.SUBCATEGORY,category))
                 } else {
                     navigator.navigate(
                         LibraryCategoryScreenDestination(
@@ -101,7 +106,9 @@ fun LibraryCategoryContent( isSubCategory:Boolean, categoryName:String, pairs: L
                 Image(
                     painter = painterResource(id = R.drawable.library_icon),
                     contentDescription = "Library Icon",
-                    contentScale = ContentScale.FillBounds, modifier = Modifier.padding(top = 24.dp).size(80.dp)
+                    contentScale = ContentScale.FillBounds, modifier = Modifier
+                        .padding(top = 24.dp)
+                        .size(80.dp)
                 )
                 Text(
                     text = stringResource(id = R.string.library_category_title),

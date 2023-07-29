@@ -64,4 +64,5 @@
     <string name="updating">Updating...</string>
     <string name="optional_group_code">Optional Group Code</string>
     <string name="powered_by">Powered by</string>
+    <string name="loading_in_progress">Tips are loading</string>
 </resources>
