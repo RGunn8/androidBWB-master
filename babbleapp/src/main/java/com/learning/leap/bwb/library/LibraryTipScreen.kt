@@ -2,7 +2,6 @@ package com.learning.leap.bwb.library
 
 import android.content.Context
 import android.media.MediaPlayer
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,7 +11,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.learning.leap.bwb.BackButton
@@ -83,7 +81,11 @@ fun LibraryTipScreen(navigator: DestinationsNavigator,libraryScreenType: Library
                         currentIndex--
                         currentTip = tipList.value[currentIndex]
                     }
-                }, onBackPressed = {
+                },
+                onVideoButtonClicked = {
+
+                },
+                onBackPressed = {
                     navigator.popBackStack()
                 }
             ) {

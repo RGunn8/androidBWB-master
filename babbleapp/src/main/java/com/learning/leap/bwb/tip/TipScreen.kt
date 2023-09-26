@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +54,7 @@ fun TipScreen(
     nextButtonID:Int,
     mediaPlayer: MediaPlayer? = null,
     isFavorite: Boolean = false,
+    onVideoButtonClicked: (Boolean) -> Unit,
     onNextPressed: () -> Unit,
     onPrevPressed: () -> Unit,
     onBackPressed: () -> Unit,
@@ -92,15 +92,8 @@ fun TipScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if (isPlayingVideo) {
-                    val file = File(context.filesDir, videoFileName)
-
-                    val videoFile = VideoPlayerMediaItem.StorageMediaItem(
-                        storageUri = file.toUri()
-                    )
-                    VideoPlayer(mediaItems = listOf(videoFile), modifier = Modifier
-                        .fillMaxSize(), onFullScreenExit = {
-                        isPlayingVideo = false
-                    })
+                     TipVideoPlayer(context, videoFileName)
+                    onVideoButtonClicked.invoke(isPlayingVideo)
                 }
                 Row(
                     Modifier
@@ -215,6 +208,24 @@ fun TipScreen(
 }
 
 @Composable
+private fun TipVideoPlayer(
+    context: Context,
+    videoFileName: String?,
+) {
+    videoFileName?.let {
+        val file = File(context.filesDir, videoFileName)
+
+        val videoFile = VideoPlayerMediaItem.StorageMediaItem(
+            storageUri = file.toUri()
+        )
+        VideoPlayer(
+            mediaItems = listOf(videoFile), modifier = Modifier
+                .fillMaxSize()
+        )
+    }
+}
+
+@Composable
 fun LoadingScreen(soundImageId:Int,screenIconId: Int,playVideoButtonId: Int){
     Column(
         Modifier.fillMaxSize(),
@@ -277,7 +288,10 @@ fun LibraryPreview(){
         playVideoButtonId = R.drawable.library_playvideo ,
         previousButtonID = R.drawable.library_prev,
         nextButtonID = R.drawable.library_next ,
-        isFavorite = false, videoFileName = "",  mediaPlayer = null, pauseSoundButtonId = R.drawable.rectangle_1_3x
+        isFavorite = false, videoFileName = "",
+        onVideoButtonClicked = {},
+        mediaPlayer = null,
+        pauseSoundButtonId = R.drawable.rectangle_1_3x
     , onNextPressed = {}, onPrevPressed = {}, onBackPressed = {}) {
 
     }

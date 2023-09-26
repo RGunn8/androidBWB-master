@@ -1,6 +1,5 @@
 package com.learning.leap.bwb.home
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.destinations.LibraryCategoryScreenDestination
+import com.learning.leap.bwb.destinations.SettingScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
@@ -75,7 +75,7 @@ fun HomeScreen(navigator: DestinationsNavigator){
                 contentScale = ContentScale.Fit,
                 modifier = Modifier.padding(top = 20.dp)
                     .clickable {
-                        // open settings
+                       navigator.navigate(SettingScreenDestination)
                     }
             )
 

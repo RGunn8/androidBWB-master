@@ -1,6 +1,5 @@
 package com.learning.leap.bwb.userInfo
 
-import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -14,7 +13,6 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedScanList
 import com.amazonaws.services.dynamodbv2.model.AttributeValue
-import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.model.BabbleUser
 import com.learning.leap.bwb.room.BabbleDatabase
@@ -64,6 +62,10 @@ class UserSettingViewModel @Inject constructor(
 
     fun onBirthdayChanged(newBirthday: String) {
         _state.postValue(state.value?.copy(birthday = newBirthday))
+    }
+
+    fun loadUser(){
+        
     }
 
     private fun retrieveNotifications(babyAge: Int, mapper: DynamoDBMapper): PaginatedScanList<BabbleTip> {
