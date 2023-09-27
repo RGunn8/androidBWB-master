@@ -82,6 +82,7 @@ private fun SettingContent(navigator: DestinationsNavigator) {
                             }
                         }
                     }
+                    .padding(top = 8.dp, start = 16.dp, end = 16.dp)
                     .background(Color.White)
                     .fillMaxWidth(), verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally) {
