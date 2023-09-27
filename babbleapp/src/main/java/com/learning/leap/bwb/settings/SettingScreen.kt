@@ -23,6 +23,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.learning.leap.bwb.BackButton
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.destinations.UserSettingsScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
@@ -31,7 +32,17 @@ import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
 @Composable
 @Destination
-fun SettingScreen(navigator: DestinationsNavigator){
+fun SettingScreen(navigator: DestinationsNavigator) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        BackButton {
+            navigator.popBackStack()
+        }
+        SettingContent(navigator)
+    }
+}
+
+@Composable
+private fun SettingContent(navigator: DestinationsNavigator) {
     Box(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.setting_bg),
@@ -44,38 +55,50 @@ fun SettingScreen(navigator: DestinationsNavigator){
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-                val settingDetailArray = stringArrayResource(id = R.array.setting_detail)
-                val settingTitleArray = stringArrayResource(id = R.array.setting_titles)
-                val settingPair = settingDetailArray.mapIndexed { index, s ->
-                    return@mapIndexed Pair(settingTitleArray[index], s)
-                }
+            val settingDetailArray = stringArrayResource(id = R.array.setting_detail)
+            val settingTitleArray = stringArrayResource(id = R.array.setting_titles)
+            val settingPair = settingDetailArray.mapIndexed { index, s ->
+                return@mapIndexed Pair(settingTitleArray[index], s)
+            }
 
-                Image(painter = painterResource(id = R.drawable.settings_icon), contentDescription = "Setting Icon", modifier = Modifier.size(80.dp).padding(bottom = 24.dp) )
-                settingPair.forEachIndexed {index, pairs ->
-                    Column( modifier = Modifier
-                        .clickable {
-                            when (index) {
-                                0 -> {
-                                   navigator.navigate(UserSettingsScreenDestination(false))
-                                }
-                                1 -> {}
-                                else -> {
+            Image(
+                painter = painterResource(id = R.drawable.settings_icon),
+                contentDescription = "Setting Icon",
+                modifier = Modifier
+                    .size(80.dp)
+                    .padding(bottom = 24.dp)
+            )
+            settingPair.forEachIndexed { index, pairs ->
+                Column(modifier = Modifier
+                    .clickable {
+                        when (index) {
+                            0 -> {
+                                navigator.navigate(UserSettingsScreenDestination(false))
+                            }
 
-                                }
+                            1 -> {}
+                            else -> {
+
                             }
                         }
-                        .background(Color.White)
-                        .fillMaxWidth(), verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(text = pairs.first, fontSize = 30.sp, color = colorResource(id = R.color.dark_green), modifier = Modifier.padding(top = 12.dp))
-                        Text(
-                            text = pairs.second,
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp)
-                        )
-                        Divider()
                     }
+                    .background(Color.White)
+                    .fillMaxWidth(), verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = pairs.first,
+                        fontSize = 30.sp,
+                        color = colorResource(id = R.color.dark_green),
+                        modifier = Modifier.padding(top = 12.dp)
+                    )
+                    Text(
+                        text = pairs.second,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(vertical = 16.dp, horizontal = 24.dp)
+                    )
+                    Divider()
                 }
+            }
         }
     }
 }
