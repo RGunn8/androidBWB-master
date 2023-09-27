@@ -64,9 +64,9 @@ private fun SettingContent(navigator: DestinationsNavigator) {
             Image(
                 painter = painterResource(id = R.drawable.settings_icon),
                 contentDescription = "Setting Icon",
-                modifier = Modifier
+                contentScale = ContentScale.FillBounds, modifier = Modifier
+                    .padding(top = 24.dp, bottom = 8.dp)
                     .size(80.dp)
-                    .padding(bottom = 24.dp)
             )
             settingPair.forEachIndexed { index, pairs ->
                 Column(modifier = Modifier
