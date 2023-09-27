@@ -45,19 +45,27 @@ fun SettingScreen(navigator: DestinationsNavigator){
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
                 val settingDetailArray = stringArrayResource(id = R.array.setting_detail)
-                val settingTitleArray = stringArrayResource(id = R.array.setting_titles)
-                val settingPair = settingDetailArray.mapIndexed { index, s ->
-                    return@mapIndexed Pair(settingTitleArray[index], s)
-                }
+            val settingTitleArray = stringArrayResource(id = R.array.setting_titles)
+            val settingPair = settingDetailArray.mapIndexed { index, s ->
+                return@mapIndexed Pair(settingTitleArray[index], s)
+            }
 
-                Image(painter = painterResource(id = R.drawable.settings_icon), contentDescription = "Setting Icon", modifier = Modifier.size(80.dp).padding(bottom = 24.dp) )
-                settingPair.forEachIndexed {index, pairs ->
-                    Column( modifier = Modifier
+            Image(
+                painter = painterResource(id = R.drawable.settings_icon),
+                contentDescription = "Library Icon",
+                contentScale = ContentScale.FillBounds, modifier = Modifier
+                    .padding(top = 24.dp, bottom = 8.dp)
+                    .size(80.dp)
+            )
+            settingPair.forEachIndexed { index, pairs ->
+                Column(
+                    modifier = Modifier
                         .clickable {
                             when (index) {
                                 0 -> {
-                                   navigator.navigate(UserSettingsScreenDestination(false))
+                                    navigator.navigate(UserSettingsScreenDestination(false))
                                 }
+
                                 1 -> {}
                                 else -> {
 
