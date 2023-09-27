@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.learning.leap.bwb.BackButton
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.destinations.DownloadScreenDestination
 import com.learning.leap.bwb.theme.BabbleTheme
@@ -49,31 +50,42 @@ fun UserSettingsScreen(newUser: Boolean, viewModel: UserSettingViewModel = hiltV
     val saveSuccessful: Boolean by viewModel.saveSuccessful.observeAsState(false)
 
     val activity = (LocalContext.current as? Activity)
+
+
     BabbleTheme {
-        if (saveSuccessful){
-            if (newUser){
+        if (saveSuccessful) {
+            if (newUser) {
                 navigator.navigate(DownloadScreenDestination)
-            }else{
+            } else {
                 navigator.navigateUp()
             }
         }
 
         BackHandler() {
-            if (newUser){
+            if (newUser) {
                 activity?.finish()
+            } else {
+                navigator.navigateUp()
             }
         }
-        UserSettingContent(
-            state = state,
-            showDialog = showDialog,
-            onBirthdayChanged = { viewModel.onBirthdayChanged(it) },
-            onNameChanged = { viewModel.onNameChange(it) },
-            onNewGenderClick = { viewModel.onGenderChange(it) },
-            onCodeChanged = { viewModel.onCodeChange(it) },
-            onSettingSaveClicked = { viewModel.saveBabbleUser(newUser) },
-            dismissedDialog = {viewModel.resetError()},
+        Column(modifier = Modifier.fillMaxSize()) {
+            if (!newUser) {
+                BackButton {
+                    navigator.popBackStack()
+                }
+            }
+            UserSettingContent(
+                state = state,
+                showDialog = showDialog,
+                onBirthdayChanged = { viewModel.onBirthdayChanged(it) },
+                onNameChanged = { viewModel.onNameChange(it) },
+                onNewGenderClick = { viewModel.onGenderChange(it) },
+                onCodeChanged = { viewModel.onCodeChange(it) },
+                onSettingSaveClicked = { viewModel.saveBabbleUser(newUser) },
+                dismissedDialog = { viewModel.resetError() },
 
-        )
+                )
+        }
     }
 }
 
