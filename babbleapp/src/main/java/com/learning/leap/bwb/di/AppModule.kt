@@ -2,14 +2,9 @@ package com.learning.leap.bwb.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.dataStore
 import androidx.datastore.dataStoreFile
-import androidx.datastore.migrations.SharedPreferencesMigration
-import androidx.datastore.migrations.SharedPreferencesView
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -24,10 +19,10 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.AmazonS3Client
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
+import com.learning.leap.bwb.localNotification.Notifier
+import com.learning.leap.bwb.localNotification.TipScheduler
 import com.learning.leap.bwb.room.BabbleDatabase
 import com.learning.leap.bwb.utility.Constant
-import com.learning.leap.bwb.utility.DynamoDBSingleton
-import com.learning.leap.bwb.utility.Utility
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -107,6 +102,22 @@ object AppModule {
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { appContext.applicationContext.dataStoreFile("DataStore.preferences_pb")}
         )
-
     }
+
+    @Provides
+    @Singleton
+    fun provideTipScheduler(@ApplicationContext appContext: Context): TipScheduler {
+        return TipScheduler(appContext)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNotifier(
+        @ApplicationContext appContext: Context,
+        dataStore: DataStore<Preferences>
+    ): Notifier {
+        return Notifier(appContext, dataStore)
+    }
+
+
 }

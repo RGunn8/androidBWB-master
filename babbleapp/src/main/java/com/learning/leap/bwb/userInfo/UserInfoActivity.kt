@@ -7,11 +7,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.learning.leap.bwb.R
-import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
 import com.learning.leap.bwb.model.BabbleUser
 import com.learning.leap.bwb.settings.WhyActivity
@@ -20,7 +18,8 @@ import com.learning.leap.bwb.utility.DynamoDBSingleton
 import com.learning.leap.bwb.utility.NetworkChecker
 import com.learning.leap.bwb.utility.Utility
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
-import java.util.*
+import java.util.Calendar
+import java.util.UUID
 
 
 class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
@@ -195,8 +194,8 @@ class UserInfoActivity : AppCompatActivity(), UserInfoViewInterface,
     }
 
     override fun downloadIntent() {
-        val downloadIntent = Intent(this@UserInfoActivity, DownloadActivity::class.java)
-        startActivity(downloadIntent)
+//        val downloadIntent = Intent(this@UserInfoActivity, DownloadActivity::class.java)
+//        startActivity(downloadIntent)
     }
 
 

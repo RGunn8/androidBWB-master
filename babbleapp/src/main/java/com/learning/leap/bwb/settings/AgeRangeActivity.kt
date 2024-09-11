@@ -1,19 +1,13 @@
 package com.learning.leap.bwb.settings
 
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.learning.leap.bwb.R
-import com.learning.leap.bwb.download.DownloadActivity
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper
-import com.learning.leap.bwb.utility.Constant
-import com.learning.leap.bwb.utility.Utility
 
 class AgeRangeActivity : AppCompatActivity() {
     lateinit var adapter: AgeRangeAdapter
@@ -75,11 +69,6 @@ class AgeRangeActivity : AppCompatActivity() {
 
 
     private fun downloadIntent() {
-        val updateIntent = Intent(this, DownloadActivity::class.java)
-        updateIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        updateIntent.putExtra(Constant.COME_FROM_AGE_RANGE, true)
-        updateIntent.putExtra(Constant.UPDATE, true)
-        startActivity(updateIntent)
 
     }
 

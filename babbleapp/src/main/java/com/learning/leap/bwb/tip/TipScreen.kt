@@ -52,6 +52,7 @@ fun TipScreen(
     playVideoButtonId:Int,
     previousButtonID:Int,
     nextButtonID:Int,
+    isPlayToday: Boolean = false,
     mediaPlayer: MediaPlayer? = null,
     isFavorite: Boolean = false,
     onVideoButtonClicked: (Boolean) -> Unit,
@@ -84,7 +85,9 @@ fun TipScreen(
            LoadingScreen(
                soundImageId = soundImageId,
                screenIconId = screenIconId,
-               playVideoButtonId = playVideoButtonId
+               playVideoButtonId = playVideoButtonId,
+               isPlayToday
+
            )
         } else {
             Column(
@@ -126,12 +129,14 @@ fun TipScreen(
                                     }
                                 }
                             })
-                    Image(
-                        painter = painterResource(id = screenIconId),
-                        contentDescription = "Screen icon",
-                        modifier = Modifier.size(80.dp),
-                        contentScale = ContentScale.FillBounds
-                    )
+                    if (screenIconId != 0) {
+                        Image(
+                            painter = painterResource(id = screenIconId),
+                            contentDescription = "Screen icon",
+                            modifier = Modifier.size(80.dp),
+                            contentScale = ContentScale.FillBounds
+                        )
+                    }
                     Image(painter = painterResource(id = playVideoButtonId),
                         contentDescription = "Play video button",
                         contentScale = ContentScale.FillBounds,
@@ -219,14 +224,19 @@ private fun TipVideoPlayer(
             storageUri = file.toUri()
         )
         VideoPlayer(
-            mediaItems = listOf(videoFile), modifier = Modifier
+            mediaItems = listOf(videoFile), autoPlay = true, modifier = Modifier
                 .fillMaxSize()
         )
     }
 }
 
 @Composable
-fun LoadingScreen(soundImageId:Int,screenIconId: Int,playVideoButtonId: Int){
+fun LoadingScreen(
+    soundImageId: Int,
+    screenIconId: Int,
+    playVideoButtonId: Int,
+    isPlayToday: Boolean = false
+) {
     Column(
         Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -244,12 +254,14 @@ fun LoadingScreen(soundImageId:Int,screenIconId: Int,playVideoButtonId: Int){
                     .size(70.dp)
                     .alpha(0f)
             )
-            Image(
-                painter = painterResource(id = screenIconId),
-                contentDescription = "Screen icon",
-                modifier = Modifier.size(80.dp),
-                contentScale = ContentScale.FillBounds
-            )
+            if (screenIconId != 0) {
+                Image(
+                    painter = painterResource(id = screenIconId),
+                    contentDescription = "Screen icon",
+                    modifier = Modifier.size(80.dp),
+                    contentScale = ContentScale.FillBounds
+                )
+            }
             Image(painter = painterResource(id = playVideoButtonId),
                 contentDescription = "Play video button",
                 modifier = Modifier
@@ -262,11 +274,20 @@ fun LoadingScreen(soundImageId:Int,screenIconId: Int,playVideoButtonId: Int){
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(id = R.string.loading_in_progress),
-                modifier = Modifier.padding(horizontal = 12.dp),
-                fontSize = 24.sp
-            )
+            if (isPlayToday) {
+                Text(
+                    text = stringResource(id = R.string.no_play_today_tips),
+                    modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 60.dp),
+                    fontSize = 24.sp
+                )
+
+            } else {
+                Text(
+                    text = stringResource(id = R.string.loading_in_progress),
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    fontSize = 24.sp
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(1f))
     }

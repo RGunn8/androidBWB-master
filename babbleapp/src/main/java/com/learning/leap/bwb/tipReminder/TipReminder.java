@@ -8,6 +8,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.localNotification.VoteNotificationBroadcastReciever;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
@@ -17,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 
 public class TipReminder {

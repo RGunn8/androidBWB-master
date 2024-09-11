@@ -35,7 +35,7 @@ class LibraryScreenViewModel @Inject constructor(
         }
     }
 
-    fun getTips(screenType: LibraryScreenType,categoryName:String){
+    fun getTips(screenType: LibraryScreenType, categoryName: String = "") {
         viewModelScope.launch {
             when (screenType) {
                 LibraryScreenType.ALLTIPS -> {
@@ -54,6 +54,16 @@ class LibraryScreenViewModel @Inject constructor(
                 LibraryScreenType.FAVORITE -> {
                     val allTips = babbleDatabase.babbleTipDAO().getTipsForFavorites()
                     _tipList.value = allTips.shuffled()
+                }
+
+                LibraryScreenType.PLAY_TODAY -> {
+                    val playTodayTips = babbleDatabase.babbleTipDAO().getTipsForPlayToday()
+                    _tipList.value = playTodayTips.shuffled()
+                }
+
+                LibraryScreenType.VOTE -> {
+                    val voteTips = babbleDatabase.babbleTipDAO().getAll()
+                    _tipList.value = voteTips.shuffled()
                 }
             }
         }

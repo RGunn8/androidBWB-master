@@ -1,6 +1,5 @@
 package com.learning.leap.bwb.download
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -51,6 +50,7 @@ BabbleTheme {
             DownloadContent()
         }
         DownloadScreenState.Success -> {
+            viewModel.scheduleTips()
             navigator.navigate(CongratsScreenDestination)
         }
     }

@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.learning.leap.bwb.ActionHistoryIntentService;
 import com.learning.leap.bwb.R;
-import com.learning.leap.bwb.library.LibraryCategoryActivity;
 import com.learning.leap.bwb.library.PlayTodayActivity;
 import com.learning.leap.bwb.settings.SettingOptionActivity;
 import com.learning.leap.bwb.tipReminder.TipReminder;
@@ -44,7 +43,6 @@ public class HomeActivity extends AppCompatActivity {
         ImageView playToday = findViewById(R.id.homeActivityPlayTodayImageView);
         ImageView leapLogo = findViewById(R.id.homeLeapLogo);
         TextView poweredByTextView = findViewById(R.id.powerByTextView);
-        libararyImageView.setOnClickListener(view -> detailIntent());
         settignsImageView.setOnClickListener(view -> settingsIntent());
         playToday.setOnClickListener(view -> playTodayIntent());
         leapLogo.setOnClickListener(view -> openWebsite());
@@ -82,12 +80,6 @@ public class HomeActivity extends AppCompatActivity {
         Intent settingOptionIntent = new Intent(HomeActivity.this, SettingOptionActivity.class);
         Utility.addCustomEvent(Constant.VIEWED_BY_SETTINGS, Utility.getUserID(this), null, this);
         startActivity(settingOptionIntent);
-    }
-
-    private void detailIntent() {
-        Intent detailIntent = new Intent(HomeActivity.this, LibraryCategoryActivity.class);
-        Utility.addCustomEvent(Constant.VIEWED_LIBRARY, Utility.getUserID(this), null, this);
-        startActivity(detailIntent);
     }
 
     private void openWebsite() {

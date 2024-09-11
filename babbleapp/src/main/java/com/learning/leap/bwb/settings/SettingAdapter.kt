@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.learning.leap.bwb.R
-import com.learning.leap.bwb.library.CategoryViewHolder
 
 class SettingAdapter(val titleStrings: List<String>, val detailStrings: List<String>) :
     RecyclerView.Adapter<SettingViewHolder>() {

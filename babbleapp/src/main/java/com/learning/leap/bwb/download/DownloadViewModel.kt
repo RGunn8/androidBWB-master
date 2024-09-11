@@ -1,5 +1,6 @@
 package com.learning.leap.bwb.download
 
+import android.icu.util.Calendar
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -10,6 +11,8 @@ import com.amazonaws.mobileconnectors.s3.transferutility.TransferListener
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferState
 import com.amazonaws.mobileconnectors.s3.transferutility.TransferUtility
 import com.amazonaws.services.s3.model.AmazonS3Exception
+import com.learning.leap.bwb.localNotification.TipNotification
+import com.learning.leap.bwb.localNotification.TipScheduler
 import com.learning.leap.bwb.room.BabbleDatabase
 import com.learning.leap.bwb.utility.Constant
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +29,7 @@ class DownloadViewModel @Inject constructor(
     private val database: BabbleDatabase,
     private val fileDir: File,
     private val dataStore: DataStore<Preferences>,
+    private val tipScheduler: TipScheduler
 ):ViewModel() {
     private var totalFilesToDownload = 0
     private var filesDownloaded = 0
@@ -42,6 +46,21 @@ init {
     downloadTips()
 }
 
+    fun scheduleTips() {
+        val firstTime = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 9)
+            set(Calendar.MINUTE, 0)
+            this.add(Calendar.DATE, 1)
+        }.timeInMillis
+
+        val secondTime = Calendar.getInstance().apply {
+            set(Calendar.HOUR_OF_DAY, 17)
+            set(Calendar.MINUTE, 0)
+            this.add(Calendar.DATE, 1)
+        }.timeInMillis
+        tipScheduler.schedule(TipNotification(firstTime, 3, 1))
+        tipScheduler.schedule(TipNotification(secondTime, 3, 2))
+    }
     private fun downloadTips(){
         viewModelScope.launch {
             filesList.addAll(retrieveFilesToDownload())

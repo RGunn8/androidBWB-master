@@ -1,4 +1,4 @@
-package com.learning.leap.bwb.library
+package com.learning.leap.bwb.library.screens
 
 import android.content.Context
 import android.media.MediaPlayer
@@ -15,6 +15,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.learning.leap.bwb.BackButton
 import com.learning.leap.bwb.R
+import com.learning.leap.bwb.library.LibraryScreenType
+import com.learning.leap.bwb.library.LibraryScreenViewModel
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.tip.TipScreen
 import com.ramcosta.composedestinations.annotation.Destination
@@ -24,7 +26,12 @@ import java.io.FileInputStream
 
 @Composable
 @Destination
-fun LibraryTipScreen(navigator: DestinationsNavigator,libraryScreenType: LibraryScreenType,categoryName:String = "",viewModel: LibraryScreenViewModel = hiltViewModel()){
+fun LibraryTipScreen(
+    navigator: DestinationsNavigator,
+    libraryScreenType: LibraryScreenType,
+    categoryName: String = "",
+    viewModel: LibraryScreenViewModel = hiltViewModel()
+) {
     val context = LocalContext.current
     LaunchedEffect(key1 = libraryScreenType, block = {
         viewModel.getTips(libraryScreenType,categoryName)
