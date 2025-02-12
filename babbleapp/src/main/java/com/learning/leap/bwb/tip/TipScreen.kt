@@ -101,8 +101,12 @@ fun TipScreen(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 6.dp, vertical = 30.dp),
-                    Arrangement.SpaceEvenly,
+                        .padding(vertical = 30.dp),
+                    horizontalArrangement = Arrangement
+                        .spacedBy(
+                            space = 32.dp,
+                            alignment = Alignment.CenterHorizontally
+                        ),
                 ) {
 
                     Image(painter = painterResource(id = soundImageId),
@@ -137,21 +141,23 @@ fun TipScreen(
                             contentScale = ContentScale.FillBounds
                         )
                     }
-                    Image(painter = painterResource(id = playVideoButtonId),
-                        contentDescription = "Play video button",
-                        contentScale = ContentScale.FillBounds,
-                        modifier = Modifier
-                            .size(70.dp)
-                            .alpha(
-                                if (displayVideoButton) {
-                                    1f
-                                } else {
-                                    0f
-                                }
-                            )
-                            .clickable {
-                                isPlayingVideo = true
-                            })
+                    if (screenIconId != 0) {
+                        Image(painter = painterResource(id = playVideoButtonId),
+                            contentDescription = "Play video button",
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier
+                                .size(70.dp)
+                                .alpha(
+                                    if (displayVideoButton) {
+                                        1f
+                                    } else {
+                                        0f
+                                    }
+                                )
+                                .clickable {
+                                    isPlayingVideo = true
+                                })
+                    }
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Column(

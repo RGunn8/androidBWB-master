@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.learning.leap.bwb.model.BabbleActionHistory
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.room.BabbleDatabase
 import com.learning.leap.bwb.utility.Constant
@@ -25,7 +26,6 @@ class LibraryScreenViewModel @Inject constructor(
 
     private val _babyName: MutableStateFlow<String> = MutableStateFlow("")
     val babyName: StateFlow<String> = _babyName
-
 
     init {
         viewModelScope.launch {
@@ -73,6 +73,20 @@ class LibraryScreenViewModel @Inject constructor(
         viewModelScope.launch {
             val updateTip = tip.copy(favorite = isFavorite)
             babbleDatabase.babbleTipDAO().updateTip(updateTip)
+        }
+    }
+
+    fun updateVoteTip(tip: BabbleTip, isFavorite: Boolean, like: Boolean) {
+        viewModelScope.launch {
+            val updateTip = tip.copy(favorite = isFavorite, playToday = true)
+            babbleDatabase.babbleTipDAO().updateTip(updateTip)
+            val actionMessage = if (like) Constant.THUMBS_UP else Constant.THUMBS_DOWN
+            BabbleActionHistory.saveActionHistoryItem(
+                babbleDatabase,
+                dataStore,
+                actionMessage,
+                tip.tag
+            )
         }
     }
 

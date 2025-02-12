@@ -4,8 +4,10 @@ package com.learning.leap.bwb.home
 
 import android.icu.util.Calendar
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +27,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -35,10 +39,13 @@ import com.learning.leap.bwb.destinations.PlayTodayScreenDestination
 import com.learning.leap.bwb.destinations.SettingScreenDestination
 import com.learning.leap.bwb.localNotification.TipNotification
 import com.learning.leap.bwb.localNotification.TipScheduler
+import com.learning.leap.bwb.room.BabbleDatabase
+import com.learning.leap.bwb.utility.Utility
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 @Destination
 fun HomeScreen(navigator: DestinationsNavigator){
@@ -58,6 +65,26 @@ fun HomeScreen(navigator: DestinationsNavigator){
             }
         }
     }
+
+    LaunchedEffect(key1 = Unit) {
+        try {
+            val actionHistory =
+                BabbleDatabase.getInstance(context.applicationContext).actionHistory()
+                    .getAllActionHistory()
+            if (actionHistory.isEmpty()) {
+                return@LaunchedEffect
+            }
+            val amazonDynamoDBClient = AmazonDynamoDBClient(Utility.getCredientail(context))
+            val mapper = DynamoDBMapper(amazonDynamoDBClient)
+            actionHistory.forEach {
+                mapper.save(it)
+            }
+            BabbleDatabase.getInstance().actionHistory().deleteAllActionHistory()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+
+    }
     Box(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.splash_home_bg),
@@ -74,15 +101,24 @@ fun HomeScreen(navigator: DestinationsNavigator){
                 painter = painterResource(id = R.drawable.home_bwbicon),
                 contentDescription = " Background",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.clickable {
-                    if (BuildConfig.DEBUG) {
-                        val oneMinFromNow = Calendar.getInstance().apply {
+                modifier = Modifier.combinedClickable(
+                    onClick = {
+                        if (BuildConfig.DEBUG) {
+                            val oneMinFromNow = Calendar.getInstance().apply {}.timeInMillis
+                            val tipScheduler = TipScheduler(context)
+                            tipScheduler.testSchedule(TipNotification(oneMinFromNow, 2, 3))
+                        }
+                    },
+                    onDoubleClick = {
+                        if (BuildConfig.DEBUG) {
+                            val oneMinFromNow = Calendar.getInstance().apply {
 
-                        }.timeInMillis
-                        val tipScheduler = TipScheduler(context)
-                        tipScheduler.testSchedule(TipNotification(oneMinFromNow, 2, 3))
+                            }.timeInMillis
+                            val tipScheduler = TipScheduler(context)
+                            tipScheduler.cancel(TipNotification(oneMinFromNow, 2, 3))
+                        }
                     }
-                }
+                )
             )
             
             Row( modifier = Modifier.padding(top = 14.dp)) {

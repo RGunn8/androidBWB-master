@@ -1,5 +1,6 @@
 package com.learning.leap.bwb.download
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,16 +27,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.destinations.CongratsScreenDestination
 import com.learning.leap.bwb.theme.BabbleTheme
+import com.learning.leap.bwb.worker.ResetPlayTodayWorker
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 @Composable
 @Destination
-fun DownloadScreen(viewModel: DownloadViewModel = hiltViewModel(), navigator: DestinationsNavigator){
+fun DownloadScreen(
+    viewModel: DownloadViewModel = hiltViewModel(),
+    fromAgeRange: Boolean = false,
+    navigator: DestinationsNavigator
+) {
     val state:DownloadScreenState by viewModel.downloadState.collectAsStateWithLifecycle()
+
+    val context = LocalContext.current
 
 BabbleTheme {
     when(val screenState = state){
@@ -50,11 +63,40 @@ BabbleTheme {
             DownloadContent()
         }
         DownloadScreenState.Success -> {
-            viewModel.scheduleTips()
-            navigator.navigate(CongratsScreenDestination)
+            if (fromAgeRange) {
+                navigator.popBackStack()
+            } else {
+                viewModel.scheduleTips()
+                navigator.navigate(CongratsScreenDestination)
+                setResetPlayTodayWorker(context)
+            }
         }
+
     }
 }
+}
+
+
+fun setResetPlayTodayWorker(context: Context) {
+    val now = Calendar.getInstance()
+    val next4AM = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 4)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+        if (before(now)) {
+            add(Calendar.DAY_OF_YEAR, 1)
+        }
+    }
+    val initialDelayMillis = next4AM.timeInMillis - now.timeInMillis
+
+    val periodicWorkRequest = PeriodicWorkRequestBuilder<ResetPlayTodayWorker>(
+        24, TimeUnit.HOURS // Repeat interval: every 24 hours
+    )
+        .setInitialDelay(initialDelayMillis, TimeUnit.MILLISECONDS)
+        .build()
+
+    WorkManager.getInstance(context).enqueue(periodicWorkRequest)
 }
 
 @Composable

@@ -16,8 +16,8 @@ class TipScheduler @Inject constructor(val context: Context) {
     private val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     private fun createPendingIntent(tipNotification: TipNotification): PendingIntent {
         val intent = Intent(context, NotificationBroadcastReceiver::class.java)
-        intent.putExtra(NUM_OF_TIP, tipNotification.numberOfTip)
         intent.putExtra(TIP_ID, tipNotification.id)
+        intent.putExtra(NUM_OF_TIP, tipNotification.numberOfTip)
         return PendingIntent.getBroadcast(
             context,
             tipNotification.id,
@@ -36,9 +36,10 @@ class TipScheduler @Inject constructor(val context: Context) {
     }
 
     fun testSchedule(tipNotification: TipNotification) {
-        alarmManager.setExact(
+        alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             tipNotification.time,
+            6000,
             createPendingIntent(tipNotification)
         )
     }

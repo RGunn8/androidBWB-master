@@ -1,4 +1,4 @@
-package com.learning.leap.bwb.userInfo
+package com.learning.leap.bwb.settings.userInfo
 
 import android.app.ProgressDialog
 import android.content.Intent

@@ -7,8 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -31,9 +29,7 @@ class Notifier @Inject constructor(
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     fun showNotification(pendingIntent: PendingIntent, id: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannel()
-        }
+        createChannel()
         val notification = getNotification(pendingIntent, context)
         notificationManager.notify(
             id,
@@ -41,7 +37,6 @@ class Notifier @Inject constructor(
         )
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private fun createChannel() {
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val notificationChannel = NotificationChannel(channelID, channelID, importance)

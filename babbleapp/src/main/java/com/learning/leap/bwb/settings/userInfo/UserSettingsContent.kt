@@ -1,18 +1,39 @@
-package com.learning.leap.bwb.userInfo
+package com.learning.leap.bwb.settings.userInfo
 
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.DatePicker
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -37,10 +58,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.learning.leap.bwb.BackButton
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.destinations.DownloadScreenDestination
+import com.learning.leap.bwb.destinations.WhyScreenDestination
 import com.learning.leap.bwb.theme.BabbleTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 @Composable
 @Destination
@@ -51,11 +74,13 @@ fun UserSettingsScreen(newUser: Boolean, viewModel: UserSettingViewModel = hiltV
 
     val activity = (LocalContext.current as? Activity)
 
-
+    if (!newUser) {
+        viewModel.loadUser()
+    }
     BabbleTheme {
         if (saveSuccessful) {
             if (newUser) {
-                navigator.navigate(DownloadScreenDestination)
+                navigator.navigate(DownloadScreenDestination(fromAgeRange = false))
             } else {
                 navigator.navigateUp()
             }
@@ -82,6 +107,7 @@ fun UserSettingsScreen(newUser: Boolean, viewModel: UserSettingViewModel = hiltV
                 onNewGenderClick = { viewModel.onGenderChange(it) },
                 onCodeChanged = { viewModel.onCodeChange(it) },
                 onSettingSaveClicked = { viewModel.saveBabbleUser(newUser) },
+                onWhyClicked = { navigator.navigate(WhyScreenDestination) },
                 dismissedDialog = { viewModel.resetError() },
 
                 )
@@ -120,6 +146,7 @@ fun GenderButton(
 
 @Composable
 fun DateTextField(
+    preFillText: String = "",
     onBirthdayChanged: (String) -> Unit,
     context:Context
 ) {
@@ -137,7 +164,7 @@ fun DateTextField(
     day = calendar.get(Calendar.DAY_OF_MONTH)
     calendar.time = Date()
 
-    val date = remember { mutableStateOf("") }
+    val date = remember { mutableStateOf(preFillText) }
     val datePickerDialog = DatePickerDialog(
         context,
         { _: DatePicker, year: Int, month: Int, dayOfMonth: Int ->
@@ -157,7 +184,7 @@ fun DateTextField(
             )
             .focusable(),
         interactionSource = interactionSource,
-        value = date.value,
+        value = preFillText,
         singleLine = true,
         enabled = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
@@ -196,6 +223,7 @@ fun UserSettingContent(
     onNameChanged: (String) -> Unit = {},
     onCodeChanged: (String) -> Unit = {},
     onSettingSaveClicked: () -> Unit = {},
+    onWhyClicked: () -> Unit = {},
     dismissedDialog: () -> Unit = {}
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -226,6 +254,7 @@ fun UserSettingContent(
             ) {
                 Spacer(Modifier.height(100.dp))
                 DateTextField(
+                    preFillText = state.birthday,
                     onBirthdayChanged = onBirthdayChanged,
                     context
                 )
@@ -279,7 +308,10 @@ fun UserSettingContent(
                 Text(text = stringResource(id = R.string.userRequestInfo))
                 Text(
                     text = stringResource(id = R.string.userTapHereFroMore),
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.clickable {
+                        onWhyClicked.invoke()
+                    }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(

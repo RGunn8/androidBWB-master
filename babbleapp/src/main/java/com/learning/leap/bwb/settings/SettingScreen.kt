@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.learning.leap.bwb.BackButton
 import com.learning.leap.bwb.R
+import com.learning.leap.bwb.destinations.AgeRangeScreenDestination
+import com.learning.leap.bwb.destinations.TipReminderScreenDestination
 import com.learning.leap.bwb.destinations.UserSettingsScreenDestination
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -76,9 +78,12 @@ private fun SettingContent(navigator: DestinationsNavigator) {
                                 navigator.navigate(UserSettingsScreenDestination(false))
                             }
 
-                            1 -> {}
-                            else -> {
+                            1 -> {
+                                navigator.navigate(TipReminderScreenDestination)
+                            }
 
+                            else -> {
+                                navigator.navigate(AgeRangeScreenDestination)
                             }
                         }
                     }

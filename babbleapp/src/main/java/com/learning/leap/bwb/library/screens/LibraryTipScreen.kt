@@ -48,6 +48,10 @@ fun LibraryTipScreen(
         var isFavorite by remember {
             mutableStateOf(currentTip.favorite)
         }
+
+    LaunchedEffect(currentTip) {
+        isFavorite = currentTip.favorite
+    }
         Column {
             BackButton {
                 navigator.popBackStack()

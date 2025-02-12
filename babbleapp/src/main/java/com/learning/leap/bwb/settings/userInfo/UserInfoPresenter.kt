@@ -1,4 +1,4 @@
-package com.learning.leap.bwb.userInfo
+package com.learning.leap.bwb.settings.userInfo
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper
 import com.learning.leap.bwb.R

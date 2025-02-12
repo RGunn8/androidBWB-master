@@ -11,15 +11,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.learning.leap.bwb.BackButton
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.library.LibraryScreenType
 import com.learning.leap.bwb.library.LibraryScreenViewModel
 import com.learning.leap.bwb.model.BabbleTip
 import com.learning.leap.bwb.tip.TipScreen
+import com.ramcosta.composedestinations.annotation.Destination
 
 @Composable
-fun VoteScreen(viewModel: LibraryScreenViewModel = hiltViewModel(), onBackPressed: () -> Unit) {
+@Destination(start = false)
+fun VoteScreen(
+    viewModel: LibraryScreenViewModel = hiltViewModel(),
+    numberOfTips: Int, closeScreen: () -> Unit
+) {
     val context = LocalContext.current
     LaunchedEffect(Unit, block = {
         viewModel.getTips(LibraryScreenType.VOTE)
@@ -37,10 +41,6 @@ fun VoteScreen(viewModel: LibraryScreenViewModel = hiltViewModel(), onBackPresse
         mutableStateOf(currentTip.favorite)
     }
     Column {
-        BackButton {
-            onBackPressed.invoke()
-            //navigator.popBackStack()
-        }
         currentTip = if (tipList.value.isNotEmpty()) {
             tipList.value[currentIndex]
         } else {
@@ -54,8 +54,8 @@ fun VoteScreen(viewModel: LibraryScreenViewModel = hiltViewModel(), onBackPresse
             displaySoundButton = !currentTip.noSoundFile(),
             displayVideoButton = !currentTip.noVideFile(),
             videoFileName = currentTip.getVideoFile(),
-            displayBackButton = tipList.value.isNotEmpty() && currentIndex > 0,
-            displayNext = currentIndex != tipList.value.size - 1,
+            displayBackButton = true,
+            displayNext = true,
             backgroundId = R.drawable.tip_bg,
             playSoundButtonId = R.drawable.tip_playaudio,
             pauseSoundButtonId = R.drawable.rectangle_3_3x,
@@ -69,14 +69,28 @@ fun VoteScreen(viewModel: LibraryScreenViewModel = hiltViewModel(), onBackPresse
             ),
             isFavorite = isFavorite,
             onNextPressed = {
-
+                viewModel.updateVoteTip(currentTip, isFavorite, true)
+                if (currentIndex + 1 == numberOfTips) {
+                    closeScreen.invoke()
+                } else {
+                    currentIndex++
+                    isFavorite = false
+                }
             }, onPrevPressed = {
+                viewModel.updateVoteTip(currentTip, isFavorite, false)
+                if (currentIndex + 1 == numberOfTips) {
+                    closeScreen.invoke()
+                } else {
+                    currentIndex++
+                    isFavorite = false
 
+                }
             },
             onVideoButtonClicked = {
 
             },
             onBackPressed = {
+                // show alert message about back button
                 //onBackPressed.invoke()
 
             }

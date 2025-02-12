@@ -1,4 +1,4 @@
-package com.learning.leap.bwb.userInfo
+package com.learning.leap.bwb.settings.userInfo
 
 import com.learning.leap.bwb.R
 

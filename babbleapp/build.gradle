@@ -28,11 +28,11 @@ kotlin {
 
 
 android {
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         applicationId "com.leap.learning.system.bwb"
-        minSdkVersion 24
-        targetSdkVersion 34
+        minSdkVersion 26
+        targetSdkVersion 35
         versionCode 1
         versionName '2.1'
         multiDexEnabled true
@@ -126,10 +126,10 @@ dependencies {
     // Kotlin
     implementation "androidx.core:core-ktx:1.12.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation("androidx.compose.material3:material3:1.4.0-alpha02")
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation 'com.evernote:android-job:1.2.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.4.0'
     implementation "androidx.work:work-runtime-ktx:2.9.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -169,4 +169,9 @@ dependencies {
     implementation 'io.github.raamcosta.compose-destinations:core:1.9.50'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.9.50'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        languageVersion = "1.9"
+    }
 }

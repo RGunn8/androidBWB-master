@@ -19,7 +19,6 @@ class SplashActivity : AppCompatActivity() {
         }
         setContent {
             DestinationsNavHost(navGraph = NavGraphs.root)
-
         }
     }
 }

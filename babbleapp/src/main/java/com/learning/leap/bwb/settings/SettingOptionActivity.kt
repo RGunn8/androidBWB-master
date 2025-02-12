@@ -6,11 +6,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.learning.leap.bwb.R
 import com.learning.leap.bwb.baseActivity.DetailActivity
-import com.learning.leap.bwb.userInfo.UserInfoActivity
+import com.learning.leap.bwb.settings.userInfo.UserInfoActivity
 
 class SettingOptionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

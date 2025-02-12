@@ -79,7 +79,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.learning.leap.bwb.userInfo.UserInfoActivity"
+            android:name="com.learning.leap.bwb.settings.userInfo.UserInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity

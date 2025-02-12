@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
         settignsImageView.setOnClickListener(view -> settingsIntent());
         playToday.setOnClickListener(view -> playTodayIntent());
         leapLogo.setOnClickListener(view -> openWebsite());
-        Utility.addCustomEvent(Constant.ACCESSED_APP, Utility.getUserID(this), null, this);
+        // Utility.addCustomEvent(Constant.ACCESSED_APP, Utility.getUserID(this), null, this);
         poweredByTextView.setOnClickListener(view -> openWebsite());
         if (Utility.isNetworkAvailable(this)) {
             ActionHistoryIntentService.startActionHistoryIntent(this);
@@ -72,13 +72,13 @@ public class HomeActivity extends AppCompatActivity {
 
     private void playTodayIntent() {
         Intent detailIntent = new Intent(HomeActivity.this, PlayTodayActivity.class);
-        Utility.addCustomEvent(Constant.VIEWED_PLAY_TODAY, Utility.getUserID(this), null, this);
+        // Utility.addCustomEvent(Constant.VIEWED_PLAY_TODAY, Utility.getUserID(this), null, this);
         startActivity(detailIntent);
     }
 
     private void settingsIntent() {
         Intent settingOptionIntent = new Intent(HomeActivity.this, SettingOptionActivity.class);
-        Utility.addCustomEvent(Constant.VIEWED_BY_SETTINGS, Utility.getUserID(this), null, this);
+        //Utility.addCustomEvent(Constant.VIEWED_BY_SETTINGS, Utility.getUserID(this), null, this);
         startActivity(settingOptionIntent);
     }
 

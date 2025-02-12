@@ -1,4 +1,4 @@
-package com.learning.leap.bwb.userInfo
+package com.learning.leap.bwb.settings.userInfo
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -19,13 +19,14 @@ import com.learning.leap.bwb.room.BabbleDatabase
 import com.learning.leap.bwb.utility.Constant
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneId
-import org.threeten.bp.temporal.ChronoUnit
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
@@ -46,7 +47,7 @@ class UserSettingViewModel @Inject constructor(
     val showDialog: LiveData<Boolean> = _showDialog
 
     private val _saveSuccessful = MutableLiveData(false)
-    val saveSuccessful : LiveData<Boolean> = _saveSuccessful
+    val saveSuccessful: LiveData<Boolean> = _saveSuccessful
 
     fun onNameChange(newName: String) {
         _state.postValue(state.value?.copy(userName = newName))
@@ -64,11 +65,28 @@ class UserSettingViewModel @Inject constructor(
         _state.postValue(state.value?.copy(birthday = newBirthday))
     }
 
-    fun loadUser(){
-        
+    fun loadUser() {
+        viewModelScope.launch {
+            val pref = dataStore.data.first()
+            val birthDay = pref[stringPreferencesKey(Constant.BABY_BIRTHDAY)]
+            val name = pref[stringPreferencesKey(Constant.BABY_NAME)]
+            val gender = pref[stringPreferencesKey(Constant.GENDER)]
+            val babyGender = Gender.valueOf(gender ?: "Not Now")
+            val groupCode = pref[stringPreferencesKey(Constant.GROUP_CODE)]
+            _state.postValue(
+                state.value?.copy(
+                    userName = name ?: "",
+                    birthday = birthDay ?: "",
+                    gender = babyGender,
+                    groupCode = groupCode ?: ""
+                )
+            )
+        }
     }
 
-    private fun retrieveNotifications(babyAge: Int, mapper: DynamoDBMapper): PaginatedScanList<BabbleTip> {
+    private fun retrieveNotifications(
+        babyAge: Int,
+    ): PaginatedScanList<BabbleTip> {
         val scanExpression = DynamoDBScanExpression()
         scanExpression.limit = 2000
         val attributeValue = HashMap<String, AttributeValue>()
@@ -86,7 +104,7 @@ class UserSettingViewModel @Inject constructor(
     }
 
     private fun updateViewAfterRetrievingNotificationList(notifications: List<BabbleTip>) {
-        _state.postValue(state.value?.copy(loading = false ))
+        _state.postValue(state.value?.copy(loading = false))
         if (notifications.isEmpty()) {
             _state.postValue(state.value?.copy(error = UserSettingError.None()))
         } else {
@@ -96,82 +114,83 @@ class UserSettingViewModel @Inject constructor(
 
     private fun saveNotifications(notifications: List<BabbleTip>) {
         viewModelScope.launch {
-           updateTips(notifications)
+            updateTips(notifications)
         }
     }
 
-    private suspend fun updateTips(notifications: List<BabbleTip>){
-        withContext(Dispatchers.IO){
-            dataStore.edit {pref ->
+    private suspend fun updateTips(notifications: List<BabbleTip>) {
+        withContext(Dispatchers.IO) {
+            dataStore.edit { pref ->
                 pref[intPreferencesKey(Constant.NOTIFICATION_SIZE)] = notifications.size
             }
             babbleDatabase.babbleTipDAO().deleteAllTips()
             babbleDatabase.babbleTipDAO().insertAll(notifications)
-            _saveSuccessful.postValue(true)
         }
     }
 
     fun saveBabbleUser(isNewUser: Boolean) {
         viewModelScope.launch {
-            try {
-                if (checkIfPlayerIsValid()) {
-                    _state.postValue(state.value?.copy(error = UserSettingError.None()))
-                    if (isNewUser) {
-                        state.value?.let {
-                            val user = BabbleUser(
-                                UUID.randomUUID().toString(),
-                                it.birthday,
-                                it.userName,
-                                it.gender.name,
-                                it.groupCode
-                            )
-                            updateUser(user,isNewUser)
-                        }
+            withContext(Dispatchers.IO) {
+                try {
+                    if (checkIfPlayerIsValid()) {
+                        _state.postValue(state.value?.copy(error = UserSettingError.None()))
+                        if (isNewUser) {
+                            state.value?.let {
+                                val user = BabbleUser(
+                                    UUID.randomUUID().toString(),
+                                    it.birthday,
+                                    it.userName,
+                                    it.gender.name,
+                                    it.groupCode
+                                )
+                                updateUser(user, isNewUser)
+                            }
 
-                    } else {
-                        val user = babbleDatabase.babbleUserDAO().getUser()
-                        state.value?.let {
-                            val updateUser = user.copy(
-                                babyBirthday = it.birthday,
-                                babyName = it.userName,
-                                babyGender = it.gender.name,
-                                groupCode = it.groupCode
-                            )
-                            updateUser(updateUser,isNewUser)
-                        }
+                        } else {
+                            val user = babbleDatabase.babbleUserDAO().getUser()
+                            state.value?.let {
+                                val updateUser = user.copy(
+                                    babyBirthday = it.birthday,
+                                    babyName = it.userName,
+                                    babyGender = it.gender.name,
+                                    groupCode = it.groupCode
+                                )
+                                updateUser(updateUser, isNewUser)
+                            }
 
+                        }
+                        saveCurrentBabblePlayerSharedPreference(isNewUser)
+                        _saveSuccessful.postValue(true)
+                    } else if (checkNameIsEmpty()) {
+                        _state.postValue(state.value?.copy(error = UserSettingError.EmptyName()))
+                        _showDialog.value = true
+                    } else if (checkNameIsTooLong()) {
+                        _state.postValue(state.value?.copy(error = UserSettingError.LongName()))
+                        _showDialog.value = true
+                    } else if (checkAge()) {
+                        _state.postValue(state.value?.copy(error = UserSettingError.Age()))
+                        _showDialog.value = true
                     }
-                    saveCurrentBabblePlayerSharedPreference(isNewUser)
-                } else if (checkNameIsEmpty()) {
-                    _state.postValue(state.value?.copy(error = UserSettingError.EmptyName()))
-                    _showDialog.value = true
-                } else if (checkNameIsTooLong()) {
-                    _state.postValue(state.value?.copy(error = UserSettingError.LongName()))
-                    _showDialog.value = true
-                } else if (checkAge()) {
-                    _state.postValue(state.value?.copy(error = UserSettingError.Age()))
+                } catch (ex: java.lang.Exception) {
+                    ex.printStackTrace()
+                    _state.postValue(state.value?.copy(error = UserSettingError.Network()))
                     _showDialog.value = true
                 }
-
-            } catch (ex: java.lang.Exception) {
-                ex.printStackTrace()
-                _state.postValue(state.value?.copy(error = UserSettingError.Network()))
-                _showDialog.value = true
             }
         }
 
     }
 
-    private suspend fun updateUser(babbleUser: BabbleUser, isNewUser: Boolean){
+    private suspend fun updateUser(babbleUser: BabbleUser, isNewUser: Boolean) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
+            withContext(Dispatchers.IO) {
                 mapper.save(babbleUser)
                 if (isNewUser) {
-                    _state.postValue(state.value?.copy(loading =true ))
+                    _state.postValue(state.value?.copy(loading = true))
                     babbleDatabase.babbleUserDAO().addUser(babbleUser)
-                    val tips = retrieveNotifications(babbleUser.userAgeInMonth,mapper)
+                    val tips = retrieveNotifications(babbleUser.userAgeInMonth)
                     updateViewAfterRetrievingNotificationList(tips.toList())
-                }else{
+                } else {
                     babbleDatabase.babbleUserDAO().update(babbleUser)
                 }
             }
@@ -190,9 +209,11 @@ class UserSettingViewModel @Inject constructor(
                     pref[stringPreferencesKey(Constant.BABY_NAME)] = it.userName
                     pref[stringPreferencesKey(Constant.GENDER)] = it.gender.name
                     pref[stringPreferencesKey(Constant.GROUP_CODE)] = it.groupCode
-                    pref[intPreferencesKey(Constant.AGE_RANGE_BUCKET)] = getAgeRangeBucket(ageInMonth)
-                    if (isNewUser){
-                        pref[stringPreferencesKey(Constant.BABBLE_ID)] = UUID.randomUUID().toString()
+                    pref[intPreferencesKey(Constant.AGE_RANGE_BUCKET)] =
+                        getAgeRangeBucket(ageInMonth)
+                    if (isNewUser) {
+                        pref[stringPreferencesKey(Constant.BABBLE_ID)] =
+                            UUID.randomUUID().toString()
                     }
 
                 }
