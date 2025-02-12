@@ -1,6 +1,9 @@
 package com.learning.leap.bwb.model
 
 import android.annotation.SuppressLint
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
@@ -9,12 +12,14 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribut
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable
 import com.learning.leap.bwb.room.BabbleDatabase
+import com.learning.leap.bwb.utility.Constant
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.first
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 
 @Entity
 @DynamoDBTable(tableName = "babbleActionHistory")
@@ -72,6 +77,33 @@ class BabbleActionHistory(
                 )
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe()
+        }
+
+        suspend fun saveActionHistoryItem(
+            database: BabbleDatabase,
+            dataStore: DataStore<Preferences>,
+            message: String?,
+            tag: String?,
+        ) {
+            val pref = dataStore.data.first()
+            val babbleID = pref[stringPreferencesKey(Constant.BABBLE_ID)] ?: ""
+            val groupCode = pref[stringPreferencesKey(Constant.GROUP_CODE)] ?: ""
+            val date = getDateString()
+            val actionHistoryTag = if (tag != null) {
+                date + tag
+            } else {
+                "None"
+            }
+            val actionHistory = BabbleActionHistory(
+                date + babbleID,
+                date,
+                babbleID,
+                date,
+                message ?: "",
+                actionHistoryTag,
+                groupCode
+            )
+            database.actionHistory().insertActionHistory(actionHistory)
         }
 
         private fun getDateString(): String {

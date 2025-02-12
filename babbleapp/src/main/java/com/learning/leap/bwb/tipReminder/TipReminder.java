@@ -8,6 +8,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.learning.leap.bwb.R;
+import com.learning.leap.bwb.localNotification.VoteNotificationBroadcastReciever;
 import com.learning.leap.bwb.utility.Constant;
 import com.learning.leap.bwb.utility.Utility;
 
@@ -17,7 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 
 public class TipReminder {
@@ -54,7 +54,7 @@ public class TipReminder {
         Intent alarmIntent = new Intent(context, VoteNotificationBroadcastReciever.class);
         alarmIntent.putExtra("id", bucketNumber);
         alarmIntent.putExtra("NumberOfTips", numberOfTips);
-        return PendingIntent.getBroadcast(context.getApplicationContext(), bucketNumber, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getBroadcast(context.getApplicationContext(), bucketNumber, alarmIntent, PendingIntent.FLAG_IMMUTABLE);
     }
 
     public void cancelTipReminder() {

@@ -19,10 +19,9 @@ import com.amazonaws.auth.CognitoCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.learning.leap.bwb.R;
 import com.learning.leap.bwb.baseActivity.HomeActivity;
-import com.learning.leap.bwb.download.DownloadActivity;
 import com.learning.leap.bwb.helper.LocalLoadSaveHelper;
 import com.learning.leap.bwb.model.BabbleActionHistory;
-import com.learning.leap.bwb.userInfo.UserInfoActivity;
+import com.learning.leap.bwb.settings.userInfo.UserInfoActivity;
 
 public class Utility {
     private static final String sharedPreferencesFile = "Global";
@@ -63,10 +62,7 @@ public class Utility {
     }
 
     private static void downloadIntent(Context context) {
-        Intent downloadIntent = new Intent(context, DownloadActivity.class);
-        downloadIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        downloadIntent.putExtra(Constant.UPDATE, true);
-        context.startActivity(downloadIntent);
+
     }
 
     public static void homeIntent(Context context) {

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.learning.leap.bwb.R
-import kotlinx.android.synthetic.main.list_item_age_range.view.*
 
 
 class AgeRangeAdapter(private val ageRanges: List<String>, val context: Context) :
@@ -32,8 +31,8 @@ class AgeRangeAdapter(private val ageRanges: List<String>, val context: Context)
                 R.color.dark_green
             ) else Color.WHITE
         )
-        holder.itemView.ageRangeTextView.setTextColor(if (selectPosition == position) Color.WHITE else Color.BLACK)
-        holder.itemView.ageRangeTextView.text = ageRanges[position]
+//        holder.itemView.ageRangeTextView.setTextColor(if (selectPosition == position) Color.WHITE else Color.BLACK)
+//        holder.itemView.ageRangeTextView.text = ageRanges[position]
         holder.itemView.setOnClickListener {
             itemOnClick?.invoke(position)
         }

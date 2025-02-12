@@ -32,7 +32,6 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     }
 
 
-    public abstract Single<List<BabbleTip>> getRealmResults();
 
     public void updateView() {
         if (isPlaying) {
@@ -80,14 +79,14 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     }
 
     public Boolean updateFavoriteForTip() {
-        BabbleTip tip = tipAtIndex();
-        tip.setFavorite(!tip.getFavorite());
-        Completable.fromAction(() -> {
-            BabbleDatabase.Companion.getInstance(null).babbleTipDAO().updateTip(tip);
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-        return tip.getFavorite();
+//        BabbleTip tip = tipAtIndex();
+//        tip.setFavorite(!tip.getFavorite());
+//        Completable.fromAction(() -> {
+//            BabbleDatabase.Companion.getInstance(null).babbleTipDAO().updateTip(tip);
+//        }).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe();
+        return false;
     }
 
 
@@ -134,11 +133,11 @@ public abstract class BaseNotificationPresenter implements NotificationPresenter
     @Override
     public void onCreate() {
         setBaseNotificationViewInterface(notificationViewInterface);
-        Disposable disposable = getRealmResults().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setNotifications, Throwable::printStackTrace);
-        disposables.add(disposable);
-    }
+//        Disposable disposable = getRealmResults().subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(this::setNotifications, Throwable::printStackTrace);
+//        disposables.add(disposable);
+   }
 
     private void displayFirstTip() {
         notificationViewInterface.hidePreviousButton();

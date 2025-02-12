@@ -19,7 +19,9 @@
     <string name="okay">OK</string>
     <string name="noPromptsForUser">There were no prompts for the baby\'s age.  Please try again.</string>
     <string name="downloadError">Error downloading.  Please try again."</string>
+    <string name="download_in_progress">Download In Progress…</string>
     <string name="almostDone">Almost Done…</string>
+    <string name="wrapping_up">Wrapping Up…</string>
     <string name="allTipsSentBetween">First Tip Reminder</string>
     <string name="MaxNumberOfTips">Number of Tips To Send Per Reminder</string>
     <string name="sendTipsToday">Send Tips Today</string>
@@ -61,4 +63,7 @@
     <string name="age_rage_title">You can select the appropriate age level for your child</string>
     <string name="updating">Updating...</string>
     <string name="optional_group_code">Optional Group Code</string>
+    <string name="powered_by">Powered by</string>
+    <string name="loading_in_progress">Tips are loading</string>
+    <string name="no_play_today_tips">No Play Today tips at the moment, check back later.</string>
 </resources>

@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.learning.leap.bwb.ActionHistoryIntentService;
 import com.learning.leap.bwb.R;
-import com.learning.leap.bwb.library.LibraryCategoryActivity;
 import com.learning.leap.bwb.library.PlayTodayActivity;
 import com.learning.leap.bwb.settings.SettingOptionActivity;
 import com.learning.leap.bwb.tipReminder.TipReminder;
@@ -44,11 +43,10 @@ public class HomeActivity extends AppCompatActivity {
         ImageView playToday = findViewById(R.id.homeActivityPlayTodayImageView);
         ImageView leapLogo = findViewById(R.id.homeLeapLogo);
         TextView poweredByTextView = findViewById(R.id.powerByTextView);
-        libararyImageView.setOnClickListener(view -> detailIntent());
         settignsImageView.setOnClickListener(view -> settingsIntent());
         playToday.setOnClickListener(view -> playTodayIntent());
         leapLogo.setOnClickListener(view -> openWebsite());
-        Utility.addCustomEvent(Constant.ACCESSED_APP, Utility.getUserID(this), null, this);
+        // Utility.addCustomEvent(Constant.ACCESSED_APP, Utility.getUserID(this), null, this);
         poweredByTextView.setOnClickListener(view -> openWebsite());
         if (Utility.isNetworkAvailable(this)) {
             ActionHistoryIntentService.startActionHistoryIntent(this);
@@ -74,20 +72,14 @@ public class HomeActivity extends AppCompatActivity {
 
     private void playTodayIntent() {
         Intent detailIntent = new Intent(HomeActivity.this, PlayTodayActivity.class);
-        Utility.addCustomEvent(Constant.VIEWED_PLAY_TODAY, Utility.getUserID(this), null, this);
+        // Utility.addCustomEvent(Constant.VIEWED_PLAY_TODAY, Utility.getUserID(this), null, this);
         startActivity(detailIntent);
     }
 
     private void settingsIntent() {
         Intent settingOptionIntent = new Intent(HomeActivity.this, SettingOptionActivity.class);
-        Utility.addCustomEvent(Constant.VIEWED_BY_SETTINGS, Utility.getUserID(this), null, this);
+        //Utility.addCustomEvent(Constant.VIEWED_BY_SETTINGS, Utility.getUserID(this), null, this);
         startActivity(settingOptionIntent);
-    }
-
-    private void detailIntent() {
-        Intent detailIntent = new Intent(HomeActivity.this, LibraryCategoryActivity.class);
-        Utility.addCustomEvent(Constant.VIEWED_LIBRARY, Utility.getUserID(this), null, this);
-        startActivity(detailIntent);
     }
 
     private void openWebsite() {

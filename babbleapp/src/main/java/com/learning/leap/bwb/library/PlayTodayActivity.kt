@@ -15,8 +15,6 @@ import com.learning.leap.bwb.notification.NotificationViewViewInterface
 import com.learning.leap.bwb.settings.SettingOptionActivity
 import com.learning.leap.bwb.utility.Constant
 import com.learning.leap.bwb.utility.Utility
-import kotlinx.android.synthetic.main.activity_library.*
-import kotlinx.android.synthetic.main.fragment_play_today.*
 import java.io.File
 import java.io.FileInputStream
 
@@ -55,28 +53,28 @@ class PlayTodayActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener,
 
 
     override fun hideFavoriteButton() {
-        playTodayFragmentFavoriteButton.visibility = View.GONE
+       // playTodayFragmentFavoriteButton.visibility = View.GONE
     }
 
     override fun updateFavorite(isFavorite: Boolean) {
         favoirte = isFavorite
-        if (isFavorite) {
-            playTodayFragmentFavoriteButton.setImageResource(R.drawable.heartfilled)
-        } else {
-            playTodayFragmentFavoriteButton.setImageResource(R.drawable.heart)
-        }
+//        if (isFavorite) {
+//            playTodayFragmentFavoriteButton.setImageResource(R.drawable.heartfilled)
+//        } else {
+//            playTodayFragmentFavoriteButton.setImageResource(R.drawable.heart)
+//        }
     }
 
     private fun setUpOnClickListener() {
-        playTodayFragmentPlayVideoImageView.setOnClickListener { presenter.onPlayVideoPress() }
-        playTodayFragmentPlayAudioImageView.setOnClickListener { presenter.onPlayAudioPress() }
-        playTodayFragmentNextImageView.setOnClickListener { presenter.onNextPress() }
-        playTodayFragmentPreviousImageView.setOnClickListener { presenter.onBackPress() }
-        playTodayFragmentStopButton.setOnClickListener { presenter.onStopButtonPress() }
-        playTodayFragmentFavoriteButton.setOnClickListener {
-            favoirte = presenter.updateFavoriteForTip()
-            updateFavorite(favoirte)
-        }
+//        playTodayFragmentPlayVideoImageView.setOnClickListener { presenter.onPlayVideoPress() }
+//        playTodayFragmentPlayAudioImageView.setOnClickListener { presenter.onPlayAudioPress() }
+//        playTodayFragmentNextImageView.setOnClickListener { presenter.onNextPress() }
+//        playTodayFragmentPreviousImageView.setOnClickListener { presenter.onBackPress() }
+//        playTodayFragmentStopButton.setOnClickListener { presenter.onStopButtonPress() }
+//        playTodayFragmentFavoriteButton.setOnClickListener {
+//            favoirte = presenter.updateFavoriteForTip()
+//            updateFavorite(favoirte)
+//        }
     }
 
     private fun releaseMediaPlayer() {
@@ -94,23 +92,23 @@ class PlayTodayActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener,
     }
 
     override fun hideNextButton() {
-        playTodayFragmentNextImageView.visibility = View.INVISIBLE
+        //playTodayFragmentNextImageView.visibility = View.INVISIBLE
     }
 
     override fun hidePreviousButton() {
-        playTodayFragmentPreviousImageView.visibility = View.INVISIBLE
+       // playTodayFragmentPreviousImageView.visibility = View.INVISIBLE
     }
 
     override fun displayNextButton() {
-        playTodayFragmentNextImageView.visibility = View.VISIBLE
+        //playTodayFragmentNextImageView.visibility = View.VISIBLE
     }
 
     override fun displayPreviousButton() {
-        playTodayFragmentPreviousImageView.visibility = View.VISIBLE
+        //playTodayFragmentPreviousImageView.visibility = View.VISIBLE
     }
 
     override fun displayPrompt(prompt: String) {
-        playTodayFragmentPromptTextView.text = prompt
+       // playTodayFragmentPromptTextView.text = prompt
     }
 
     override fun playSound(fileName: String) {
@@ -146,19 +144,19 @@ class PlayTodayActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener,
     }
 
     override fun displaySoundButton() {
-        playTodayFragmentPlayAudioImageView.visibility = View.VISIBLE
+       // playTodayFragmentPlayAudioImageView.visibility = View.VISIBLE
     }
 
     override fun displayVideoButton() {
-        playTodayFragmentPlayVideoImageView.visibility = View.VISIBLE
+        //playTodayFragmentPlayVideoImageView.visibility = View.VISIBLE
     }
 
     override fun hideSoundButton() {
-        playTodayFragmentPlayAudioImageView.visibility = View.INVISIBLE
+        //playTodayFragmentPlayAudioImageView.visibility = View.INVISIBLE
     }
 
     override fun hideVideoButton() {
-        playTodayFragmentPlayVideoImageView.visibility = View.INVISIBLE
+        //playTodayFragmentPlayVideoImageView.visibility = View.INVISIBLE
     }
 
     override fun onHomePress() {
@@ -172,11 +170,11 @@ class PlayTodayActivity : AppCompatActivity(), MediaPlayer.OnPreparedListener,
     override fun onPlayToday() {}
     override fun onLibraryPress() {}
     override fun hideStopButton() {
-        playTodayFragmentStopButton.visibility = View.GONE
+        //playTodayFragmentStopButton.visibility = View.GONE
     }
 
     override fun displayStopButton() {
-        playTodayFragmentStopButton.visibility = View.VISIBLE
+        //playTodayFragmentStopButton.visibility = View.VISIBLE
     }
 
     override fun stopPlayer() {

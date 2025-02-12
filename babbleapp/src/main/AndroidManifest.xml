@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.learning.leap.bwb">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -18,9 +21,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove"></provider>
+
         <service
             android:name="com.amazonaws.mobileconnectors.s3.transferutility.TransferService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:exported="false" />
         <service
             android:name=".ActionHistoryIntentService"
             android:exported="false" />
@@ -33,7 +42,7 @@
             android:name=".DownloadService"
             android:exported="false" />
 
-        <receiver android:name="com.learning.leap.bwb.tipReminder.VoteNotificationBroadcastReciever" />
+        <receiver android:name="com.learning.leap.bwb.localNotification.VoteNotificationBroadcastReciever" />
 
         <receiver
             android:name=".AlarmReciver"
@@ -42,8 +51,13 @@
         </receiver>
 
         <receiver
+            android:name=".localNotification.NotificationBroadcastReceiver"
+            android:exported="false" />
+
+        <receiver
             android:name="com.learning.leap.bwb.utility.ResetAlarmClockBrodcastReceiver"
             android:enabled="false"
+            android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -53,7 +67,10 @@
 
         <activity
             android:name="com.learning.leap.bwb.baseActivity.SplashActivity"
-            android:screenOrientation="portrait">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Splash"
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -62,53 +79,57 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.learning.leap.bwb.userInfo.UserInfoActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.learning.leap.bwb.download.DownloadActivity"
+            android:name="com.learning.leap.bwb.settings.userInfo.UserInfoActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.baseActivity.HomeActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.baseActivity.DetailActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
 
             />
         <activity
             android:name="com.learning.leap.bwb.library.VideoActivity"
+            android:exported="false"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name=".vote.VoteActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name="com.learning.leap.bwb.settings.TipSettingsActivity"
+            android:exported="false"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name="com.learning.leap.bwb.settings.SettingOptionActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.settings.WhyActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.learning.leap.bwb.vote.VoteViewActivity"
             android:excludeFromRecents="true"
-            android:exported="true"
+            android:exported="false"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:parentActivityName=".baseActivity.HomeActivity"
+            android:screenOrientation="portrait"
             android:taskAffinity="" />
         <activity
-            android:name=".download.CongratsActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".library.LibraryCategoryActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".library.LibraryActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".library.PlayTodayActivity"
+            android:exported="false"
             android:screenOrientation="portrait" />
-        <activity android:name=".settings.AgeRangeActivity" />
-        <activity android:name=".UpdatedToTwoActivity" />
+        <activity
+            android:name=".settings.AgeRangeActivity"
+            android:exported="false" />
+        <!--        <activity android:name=".UpdatedToTwoActivity"-->
+        <!--            android:exported="false" />-->
 
         <meta-data
             android:name="io.fabric.ApiKey"

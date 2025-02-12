@@ -44,7 +44,7 @@ public class VideoActivity extends AppCompatActivity implements MediaPlayer.OnCo
 //                v.setMediaController(new MediaController(this));
 //                v.setOnCompletionListener(this);
                 File videoFile = new File(getFilesDir(), url);
-                emVideoView.setVideoURI(Uri.fromFile(videoFile));
+                //emVideoView.setVideoURI(Uri.fromFile(videoFile));
 
 //                v.start();
 //                v.requestFocus();
